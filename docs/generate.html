@@ -1,14 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Word to Canvas Converter</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-slate-50 text-slate-800 font-sans p-8">
+---
+layout: default
+title: Word to Canvas Converter
+---
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
 
+<style>
+    /* Tool wrapper to break out of gh-canvas grid and reset styles */
+    .tool-wrapper {
+        grid-column: full-start / full-end;
+        background-color: #f8fafc; /* bg-slate-50 */
+        color: #1e293b; /* text-slate-800 */
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        padding: 2rem;
+    }
+    
+    /* Reset gh-content defaults that conflict with Tailwind */
+    .tool-wrapper h1, 
+    .tool-wrapper h2, 
+    .tool-wrapper h3,
+    .tool-wrapper p {
+        margin-top: 0;
+        margin-bottom: 0;
+        letter-spacing: normal;
+        line-height: inherit;
+    }
+    
+    .tool-wrapper a {
+        text-decoration: none;
+        color: inherit;
+    }
+    .tool-wrapper a:hover {
+        text-decoration: none;
+    }
+</style>
+
+<div class="tool-wrapper full-width">
     <div class="max-w-4xl mx-auto">
         <div class="mb-8 border-b border-slate-200 pb-4">
             <h1 class="text-3xl font-bold text-slate-900">Word to Canvas Converter</h1>
@@ -50,142 +77,141 @@
                     Copy HTML Code
                 </button>
                 <p class="text-xs text-slate-600 bg-yellow-50 border border-yellow-200 p-2 rounded shadow-sm">
-                    ⚠️ Paste inside the <strong>HTML Editor (&lt;/&gt;)</strong> in Canvas
+                    ⚠️ Paste inside the <strong>HTML Editor (</>)</strong> in Canvas
                 </p>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        // A. The Themes: CSS Inliner Rules
-        const themes = {
-            academic: {
-                container: "font-family: Georgia, serif; line-height: 1.6; color: #111; max-width: 800px; margin: 0 auto;",
-                h1: "font-family: Arial, sans-serif; font-weight: 900; font-size: 2.2em; border-bottom: 2px solid #333; margin-top: 2rem; margin-bottom: 1rem;",
-                h2: "font-family: Arial, sans-serif; font-weight: 700; font-size: 1.5em; border-bottom: 1px solid #ccc; margin-top: 1.5rem;",
-                h3: "font-family: Arial, sans-serif; font-weight: 600; font-size: 1.25em; margin-top: 1.25rem; opacity: 0.9;",
-                p: "margin-bottom: 1rem;",
-                ul: "margin-left: 1.5rem; margin-bottom: 1rem;",
-                ol: "margin-left: 1.5rem; margin-bottom: 1rem;",
-                li: "margin-bottom: 0.5rem;",
-                a: "color: #0056b3; text-decoration: underline;",
-                table: "width: 100%; border-collapse: collapse; margin-bottom: 1rem;",
-                td: "border: 1px solid #ddd; padding: 8px;",
-                th: "border: 1px solid #ddd; padding: 8px; font-weight: bold; text-align: left;"
-            },
-            modern: {
-                container: "font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #374151; max-width: 800px; margin: 0 auto;",
-                h1: "font-weight: 800; font-size: 2.25em; letter-spacing: -0.025em; color: #111827; margin-bottom: 1rem;",
-                h2: "font-weight: 700; font-size: 1.5em; color: #1f2937; margin-top: 2rem; border-left: 4px solid #3b82f6; padding-left: 1rem;",
-                h3: "font-weight: 600; font-size: 1.25em; color: #374151; margin-top: 1.5rem;",
-                p: "margin-bottom: 1.5rem;",
-                ul: "margin-left: 1.5rem; list-style-type: disc; margin-bottom: 1.5rem;",
-                ol: "margin-left: 1.5rem; list-style-type: decimal; margin-bottom: 1.5rem;",
-                a: "color: #2563eb; text-decoration: none; font-weight: 600;",
-                table: "width: 100%; border-collapse: collapse; margin-bottom: 1.5rem;",
-                td: "border-bottom: 1px solid #e5e7eb; padding: 12px;",
-                th: "border-bottom: 2px solid #e5e7eb; padding: 12px; font-weight: 600; text-align: left;"
-            },
-            brutalist: {
-                container: "font-family: 'Courier New', monospace; line-height: 1.4; color: #000; max-width: 800px; margin: 0 auto; border: 2px solid black; padding: 2rem;",
-                h1: "font-family: Arial Black, sans-serif; text-transform: uppercase; font-size: 3em; background: #000; color: #fff; padding: 10px; margin-bottom: 20px;",
-                h2: "font-weight: bold; border: 2px solid black; padding: 5px 10px; display: inline-block; margin-top: 30px; margin-bottom: 10px; background: #ffff00;",
-                h3: "font-weight: bold; text-decoration: underline; margin-top: 20px;",
-                p: "margin-bottom: 20px;",
-                ul: "margin-left: 20px; margin-bottom: 20px; list-style-type: square;",
-                ol: "margin-left: 20px; margin-bottom: 20px;",
-                a: "background: #000; color: #fff; padding: 2px 5px; text-decoration: none;",
-                table: "width: 100%; border: 2px solid black; margin-bottom: 20px;",
-                td: "border: 1px solid black; padding: 10px;",
-                th: "border: 2px solid black; padding: 10px; font-weight: bold; text-transform: uppercase;"
-            }
+<script>
+    // A. The Themes: CSS Inliner Rules
+    const themes = {
+        academic: {
+            container: "font-family: Georgia, serif; line-height: 1.6; color: #111; max-width: 800px; margin: 0 auto;",
+            h1: "font-family: Arial, sans-serif; font-weight: 900; font-size: 2.2em; border-bottom: 2px solid #333; margin-top: 2rem; margin-bottom: 1rem;",
+            h2: "font-family: Arial, sans-serif; font-weight: 700; font-size: 1.5em; border-bottom: 1px solid #ccc; margin-top: 1.5rem;",
+            h3: "font-family: Arial, sans-serif; font-weight: 600; font-size: 1.25em; margin-top: 1.25rem; opacity: 0.9;",
+            p: "margin-bottom: 1rem;",
+            ul: "margin-left: 1.5rem; margin-bottom: 1rem;",
+            ol: "margin-left: 1.5rem; margin-bottom: 1rem;",
+            li: "margin-bottom: 0.5rem;",
+            a: "color: #0056b3; text-decoration: underline;",
+            table: "width: 100%; border-collapse: collapse; margin-bottom: 1rem;",
+            td: "border: 1px solid #ddd; padding: 8px;",
+            th: "border: 1px solid #ddd; padding: 8px; font-weight: bold; text-align: left;"
+        },
+        modern: {
+            container: "font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #374151; max-width: 800px; margin: 0 auto;",
+            h1: "font-weight: 800; font-size: 2.25em; letter-spacing: -0.025em; color: #111827; margin-bottom: 1rem;",
+            h2: "font-weight: 700; font-size: 1.5em; color: #1f2937; margin-top: 2rem; border-left: 4px solid #3b82f6; padding-left: 1rem;",
+            h3: "font-weight: 600; font-size: 1.25em; color: #374151; margin-top: 1.5rem;",
+            p: "margin-bottom: 1.5rem;",
+            ul: "margin-left: 1.5rem; list-style-type: disc; margin-bottom: 1.5rem;",
+            ol: "margin-left: 1.5rem; list-style-type: decimal; margin-bottom: 1.5rem;",
+            a: "color: #2563eb; text-decoration: none; font-weight: 600;",
+            table: "width: 100%; border-collapse: collapse; margin-bottom: 1.5rem;",
+            td: "border-bottom: 1px solid #e5e7eb; padding: 12px;",
+            th: "border-bottom: 2px solid #e5e7eb; padding: 12px; font-weight: 600; text-align: left;"
+        },
+        brutalist: {
+            container: "font-family: 'Courier New', monospace; line-height: 1.4; color: #000; max-width: 800px; margin: 0 auto; border: 2px solid black; padding: 2rem;",
+            h1: "font-family: Arial Black, sans-serif; text-transform: uppercase; font-size: 3em; background: #000; color: #fff; padding: 10px; margin-bottom: 20px;",
+            h2: "font-weight: bold; border: 2px solid black; padding: 5px 10px; display: inline-block; margin-top: 30px; margin-bottom: 10px; background: #ffff00;",
+            h3: "font-weight: bold; text-decoration: underline; margin-top: 20px;",
+            p: "margin-bottom: 20px;",
+            ul: "margin-left: 20px; margin-bottom: 20px; list-style-type: square;",
+            ol: "margin-left: 20px; margin-bottom: 20px;",
+            a: "background: #000; color: #fff; padding: 2px 5px; text-decoration: none;",
+            table: "width: 100%; border: 2px solid black; margin-bottom: 20px;",
+            td: "border: 1px solid black; padding: 10px;",
+            th: "border: 2px solid black; padding: 10px; font-weight: bold; text-transform: uppercase;"
+        }
+    };
+
+    let generatedHTML = "";
+    let lastRawHTML = ""; // To store the raw conversion for theme switching
+
+    // B. The Listener
+    document.getElementById('uploadInput').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        
+        // Mammoth requires an ArrayBuffer
+        reader.onload = function(loadEvent) {
+            const arrayBuffer = loadEvent.target.result;
+            
+            // C. The Engine: Convert Docx -> Raw HTML
+            mammoth.convertToHtml({arrayBuffer: arrayBuffer})
+                .then(result => {
+                    lastRawHTML = result.value; // Store raw result
+                    displayResult(result);
+                })
+                .catch(handleError);
         };
+        
+        reader.readAsArrayBuffer(file);
+    });
 
-        let generatedHTML = "";
-        let lastRawHTML = ""; // To store the raw conversion for theme switching
+    function displayResult(result) {
+        // Check for warnings (optional, but good for debugging)
+        if(result.messages.length > 0) {
+            console.log("Mammoth Warnings:", result.messages);
+        }
+        applyTheme(lastRawHTML);
+    }
 
-        // B. The Listener
-        document.getElementById('uploadInput').addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (!file) return;
+    function applyTheme(htmlContent) {
+        const themeKey = document.getElementById('themeSelector').value;
+        const style = themes[themeKey];
 
-            const reader = new FileReader();
-            
-            // Mammoth requires an ArrayBuffer
-            reader.onload = function(loadEvent) {
-                const arrayBuffer = loadEvent.target.result;
-                
-                // C. The Engine: Convert Docx -> Raw HTML
-                mammoth.convertToHtml({arrayBuffer: arrayBuffer})
-                    .then(result => {
-                        lastRawHTML = result.value; // Store raw result
-                        displayResult(result);
-                    })
-                    .catch(handleError);
-            };
-            
-            reader.readAsArrayBuffer(file);
+        // Create wrapper to parse string into DOM
+        const wrapper = document.createElement('div');
+        wrapper.innerHTML = htmlContent;
+
+        // Apply Container Style
+        const container = document.createElement('div');
+        container.setAttribute('style', style.container);
+
+        // Apply Tag Styles (The Inliner)
+        // We loop through all relevant tags to apply the theme's CSS inline
+        ['h1', 'h2', 'h3', 'p', 'ul', 'ol', 'li', 'a', 'table', 'td', 'th'].forEach(tag => {
+            const elements = wrapper.getElementsByTagName(tag);
+            for (let el of elements) {
+                if (style[tag]) {
+                    const currentStyle = el.getAttribute('style') || "";
+                    el.setAttribute('style', style[tag] + currentStyle);
+                }
+            }
         });
 
-        function displayResult(result) {
-            // Check for warnings (optional, but good for debugging)
-            if(result.messages.length > 0) {
-                console.log("Mammoth Warnings:", result.messages);
-            }
+        // Re-render
+        container.innerHTML = wrapper.innerHTML;
+        generatedHTML = container.outerHTML;
+        document.getElementById('preview').innerHTML = generatedHTML;
+    }
+
+    // Re-run styling if they change the dropdown
+    document.getElementById('themeSelector').addEventListener('change', function() {
+        if(lastRawHTML) {
             applyTheme(lastRawHTML);
         }
+    });
 
-        function applyTheme(htmlContent) {
-            const themeKey = document.getElementById('themeSelector').value;
-            const style = themes[themeKey];
+    function handleError(err) {
+        console.log(err);
+        alert("Error reading file. Make sure it is a valid .docx");
+    }
 
-            // Create wrapper to parse string into DOM
-            const wrapper = document.createElement('div');
-            wrapper.innerHTML = htmlContent;
-
-            // Apply Container Style
-            const container = document.createElement('div');
-            container.setAttribute('style', style.container);
-
-            // Apply Tag Styles (The Inliner)
-            // We loop through all relevant tags to apply the theme's CSS inline
-            ['h1', 'h2', 'h3', 'p', 'ul', 'ol', 'li', 'a', 'table', 'td', 'th'].forEach(tag => {
-                const elements = wrapper.getElementsByTagName(tag);
-                for (let el of elements) {
-                    if (style[tag]) {
-                        const currentStyle = el.getAttribute('style') || "";
-                        el.setAttribute('style', style[tag] + currentStyle);
-                    }
-                }
-            });
-
-            // Re-render
-            container.innerHTML = wrapper.innerHTML;
-            generatedHTML = container.outerHTML;
-            document.getElementById('preview').innerHTML = generatedHTML;
+    function copyToClipboard() {
+        if (!generatedHTML) {
+            alert("Upload a file first!");
+            return;
         }
-
-        // Re-run styling if they change the dropdown
-        document.getElementById('themeSelector').addEventListener('change', function() {
-            if(lastRawHTML) {
-                applyTheme(lastRawHTML);
-            }
+        navigator.clipboard.writeText(generatedHTML).then(() => {
+            alert("HTML Code Copied to Clipboard!\n\nNext Step: Go to Canvas, click the </> icon, and paste.");
         });
-
-        function handleError(err) {
-            console.log(err);
-            alert("Error reading file. Make sure it is a valid .docx");
-        }
-
-        function copyToClipboard() {
-            if (!generatedHTML) {
-                alert("Upload a file first!");
-                return;
-            }
-            navigator.clipboard.writeText(generatedHTML).then(() => {
-                alert("HTML Code Copied to Clipboard!\n\nNext Step: Go to Canvas, click the </> icon, and paste.");
-            });
-        }
-    </script>
-</body>
-</html>
+    }
+</script>

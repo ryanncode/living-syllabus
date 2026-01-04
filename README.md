@@ -1,8 +1,8 @@
 # The Living Syllabus User Guide
 
-> **Compatibility Note:** While this guide focuses on **Canvas**, this tool produces standard, flat HTML5 that works equally well in **Blackboard**, **Moodle**, **Brightspace (D2L)**, and any other LMS that accepts HTML input.
-
 ## Phase 1: The Setup (Installation & Workflow)
+
+> **Compatibility Note:** While this guide focuses on **Canvas**, this tool produces standard, flat HTML5 that works equally well in **Blackboard**, **Moodle**, **Brightspace (D2L)**, and any other LMS that accepts HTML input.
 
 ### 1.1. The "No-Code" Promise
 

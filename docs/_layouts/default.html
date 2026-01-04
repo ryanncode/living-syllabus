@@ -61,18 +61,10 @@
         /* NAVIGATION */
         .gh-navigation { padding: 30px 4vw; display: flex; justify-content: space-between; align-items: center; }
         .gh-navigation-logo { font-weight: 800; font-size: 1.5rem; letter-spacing: -0.5px; color: #15171a; }
-        .nav ul { list-style: none; display: flex; gap: 20px; padding: 0; margin: 0; }
-        .nav a { font-weight: 500; opacity: 0.8; font-size: 0.95rem; }
 
         /* ARTICLE HEADER */
         .gh-article-header { padding-top: 60px; padding-bottom: 60px; text-align: center; display: flex; flex-direction: column; align-items: center; }
-        .gh-article-tag { color: var(--gh-accent-color); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; margin-bottom: 16px; }
         .gh-article-title { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 800; line-height: 1.1; margin: 0 0 24px; letter-spacing: -0.02em; }
-        
-        .gh-article-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 40px; font-size: 0.9rem; color: #738a94; }
-        .gh-article-author-image img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
-        .gh-article-meta-content { display: flex; flex-direction: column; text-align: left; }
-        .gh-article-author-name { margin: 0; font-weight: 700; color: #15171a; font-size: 0.95rem; }
         
         .gh-article-image { margin: 40px 0 60px; width: 100%; }
         .gh-article-image img { width: 100%; height: auto; border-radius: 3px; }
@@ -92,14 +84,10 @@
         /* FOOTER */
         .gh-footer { background: #15171a; color: #fff; padding: 60px 4vw; margin-top: 80px; text-align: center; }
         .gh-footer a { color: #fff; opacity: 0.7; }
-        .gh-footer-signup { margin-top: 40px; padding: 40px; background: rgba(255,255,255,0.05); border-radius: 8px; max-width: 600px; margin-left: auto; margin-right: auto; }
-        .gh-form { display: flex; gap: 10px; margin-top: 20px; }
-        .gh-form-input { flex: 1; padding: 12px; border-radius: 5px; border: none; }
-        .gh-button { padding: 12px 24px; background: #fff; color: #15171a; border: none; border-radius: 5px; font-weight: 700; cursor: pointer; }
 
     </style>
 
-    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+    <link rel="stylesheet" href="{{ '/assets/css/grey.css' | relative_url }}">
 
 </head>
 <body class="post-template">
@@ -111,58 +99,12 @@
                     {{ site.title | default: "Thinghood Limited" }}
                 </a>
             </div>
-            <nav class="gh-navigation-menu">
-                <ul class="nav">
-                    {% for item in site.data.navigation %}
-                    <li class="nav-{{ item.title | downcase }}"><a href="{{ item.url }}">{{ item.title }}</a></li>
-                    {% else %}
-                    <li class="nav-home"><a href="{{ site.baseurl }}/">Home</a></li>
-                    <li class="nav-about"><a href="{{ site.baseurl }}/about/">About</a></li>
-                    {% endfor %}
-                    <li><a href="{{ '/' | relative_url }}">Home</a></li>
-                    <li><a href="{{ '/about' | relative_url }}">About</a></li>
-                    <li><a href="https://github.com/yourname/repo">View on GitHub</a></li>
-                </ul>
-            </nav>
-            <div class="gh-navigation-actions">
-                <a class="gh-button" href="#subscribe">Subscribe</a>
-            </div>
         </header>
 
         <main class="gh-main">
             <article class="gh-article post">
                 <header class="gh-article-header gh-canvas">
-                    {% if page.tags.size > 0 %}
-                    <a class="gh-article-tag" href="{{ site.baseurl }}/tag/{{ page.tags[0] | slugify }}">{{ page.tags[0] }}</a>
-                    {% endif %}
-                    
                     <h1 class="gh-article-title is-title">{{ page.title }}</h1>
-
-                    <div class="gh-article-meta">
-                        <div class="gh-article-author-image">
-                            {% if page.author_image %}
-                            <img src="{{ page.author_image }}" alt="{{ page.author }}">
-                            {% endif %}
-                        </div>
-                        <div class="gh-article-meta-wrapper">
-                            <h4 class="gh-article-author-name">{{ page.author | default: site.author }}</h4>
-                            <div class="gh-article-meta-content">
-                                <time class="gh-article-meta-date" datetime="{{ page.date | date_to_xmlschema }}">
-                                    {{ page.date | date: "%d %b %Y" }}
-                                </time>
-                                <span class="gh-article-meta-length"><span class="bull">—</span> {{ content | number_of_words | divided_by: 200 }} min read</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {% if page.image %}
-                    <figure class="gh-article-image">
-                        <img src="{{ page.image }}" alt="{{ page.title }}">
-                        {% if page.image_caption %}
-                        <figcaption>{{ page.image_caption }}</figcaption>
-                        {% endif %}
-                    </figure>
-                    {% endif %}
                 </header>
 
                 <section class="gh-content gh-canvas is-body">
@@ -179,15 +121,6 @@
                         &copy; {{ site.time | date: '%Y' }} {{ site.title }}. Powered by Jekyll.
                     </div>
                 </div>
-                
-                <section class="gh-footer-signup" id="subscribe">
-                    <h2 class="gh-footer-signup-header is-title">Sign Up</h2>
-                    <p class="gh-footer-signup-subhead is-body">Everything must go. Even you.</p>
-                    <form class="gh-form">
-                        <input class="gh-form-input" type="email" placeholder="jamie@example.com" required>
-                        <button class="gh-button" type="submit">Subscribe</button>
-                    </form>
-                </section>
             </div>
         </footer>
     </div>

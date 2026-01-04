@@ -1,13 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Classless Theme Builder</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-slate-50 text-slate-800 font-sans p-8">
+---
+layout: default
+title: Classless Theme Builder
+---
+<script src="https://cdn.tailwindcss.com"></script>
 
+<style>
+    /* Tool wrapper to break out of gh-canvas grid and reset styles */
+    .tool-wrapper {
+        grid-column: full-start / full-end;
+        background-color: #f8fafc; /* bg-slate-50 */
+        color: #1e293b; /* text-slate-800 */
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        padding: 2rem;
+    }
+    
+    /* Reset gh-content defaults that conflict with Tailwind */
+    .tool-wrapper h1, 
+    .tool-wrapper h2, 
+    .tool-wrapper h3,
+    .tool-wrapper p {
+        margin-top: 0;
+        margin-bottom: 0;
+        letter-spacing: normal;
+        line-height: inherit;
+    }
+    
+    .tool-wrapper a {
+        text-decoration: none;
+        color: inherit;
+    }
+    .tool-wrapper a:hover {
+        text-decoration: none;
+    }
+</style>
+
+<div class="tool-wrapper full-width">
     <div class="max-w-4xl mx-auto">
         <div class="mb-8 border-b border-slate-200 pb-4 flex justify-between items-end">
             <div>
@@ -76,46 +103,47 @@
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        // URLs for raw CSS files (CDN)
-        const SOURCES = {
-            water: 'https://cdn.jsdelivr.net/npm/water.css@2/out/light.css',
-            simple: 'https://cdn.simplecss.org/simple.css',
-            pico: 'https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.classless.min.css'
-        };
+<script>
+    // URLs for raw CSS files (CDN)
+    const SOURCES = {
+        water: 'https://cdn.jsdelivr.net/npm/water.css@2/out/light.css',
+        simple: 'https://cdn.simplecss.org/simple.css',
+        pico: 'https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.classless.min.css'
+    };
 
-        // Sync Hex Text with Color Picker
-        const colorInput = document.getElementById('brandColor');
-        const hexInput = document.getElementById('brandColorHex');
+    // Sync Hex Text with Color Picker
+    const colorInput = document.getElementById('brandColor');
+    const hexInput = document.getElementById('brandColorHex');
 
-        colorInput.addEventListener('input', (e) => hexInput.value = e.target.value.toUpperCase());
-        hexInput.addEventListener('input', (e) => colorInput.value = e.target.value);
+    colorInput.addEventListener('input', (e) => hexInput.value = e.target.value.toUpperCase());
+    hexInput.addEventListener('input', (e) => colorInput.value = e.target.value);
 
-        async function buildTheme() {
-            const themeKey = document.getElementById('baseTheme').value;
-            const primaryColor = document.getElementById('brandColor').value;
-            const scope = document.getElementById('scopeClass').value;
-            const statusLabel = document.getElementById('status');
-            const outputArea = document.getElementById('outputCSS');
+    async function buildTheme() {
+        const themeKey = document.getElementById('baseTheme').value;
+        const primaryColor = document.getElementById('brandColor').value;
+        const scope = document.getElementById('scopeClass').value;
+        const statusLabel = document.getElementById('status');
+        const outputArea = document.getElementById('outputCSS');
 
-            outputArea.value = "Fetching and processing...";
+        outputArea.value = "Fetching and processing...";
 
-            try {
-                // 1. Fetch
-                const response = await fetch(SOURCES[themeKey]);
-                let css = await response.text();
+        try {
+            // 1. Fetch
+            const response = await fetch(SOURCES[themeKey]);
+            let css = await response.text();
 
-                // 2. Inject Brand Colors (Naive Regex Replacement)
-                // This targets common variable names used in these specific libraries
-                // Water.css uses --background-body, --text-main, etc.
-                // Simple.css uses --accent, --bg, etc.
-                // Pico uses --primary, etc.
-                
-                // Heuristic: Replace generic blue/accent hexes if variables aren't obvious
-                // But better: Append a root override block at the top which is safer.
-                
-                const rootOverride = `
+            // 2. Inject Brand Colors (Naive Regex Replacement)
+            // This targets common variable names used in these specific libraries
+            // Water.css uses --background-body, --text-main, etc.
+            // Simple.css uses --accent, --bg, etc.
+            // Pico uses --primary, etc.
+            
+            // Heuristic: Replace generic blue/accent hexes if variables aren't obvious
+            // But better: Append a root override block at the top which is safer.
+            
+            const rootOverride = `
 /* LIVING SYLLABUS: SCOPED THEME (${themeKey}) 
    Generated: ${new Date().toLocaleDateString()}
 */
@@ -130,75 +158,73 @@ ${scope} {
 }
 `;
 
-                // 3. Client-Side Scoping (The Prefix Logic)
-                // We use a regex to find all selectors before a '{'
-                // This is a "Lite" parser. It is not perfect but works for classless files.
+            // 3. Client-Side Scoping (The Prefix Logic)
+            // We use a regex to find all selectors before a '{'
+            // This is a "Lite" parser. It is not perfect but works for classless files.
+            
+            let scopedCSS = css.replace(/([^\r\n,{}]+)(,(?=[^}]*{)|\s*{)/g, (match, selector, separator) => {
+                // Clean selector
+                selector = selector.trim();
                 
-                let scopedCSS = css.replace(/([^\r\n,{}]+)(,(?=[^}]*{)|\s*{)/g, (match, selector, separator) => {
-                    // Clean selector
-                    selector = selector.trim();
-                    
-                    // Don't prefix @media, @keyframes, or existing :root
-                    if (selector.startsWith('@') || selector.startsWith(':root') || selector === 'html') {
-                        return match; 
-                    }
-                    
-                    // Handle "body" specifically - map it to the scope
-                    if (selector === 'body') {
-                        return `${scope} ${separator}`;
-                    }
+                // Don't prefix @media, @keyframes, or existing :root
+                if (selector.startsWith('@') || selector.startsWith(':root') || selector === 'html') {
+                    return match; 
+                }
+                
+                // Handle "body" specifically - map it to the scope
+                if (selector === 'body') {
+                    return `${scope} ${separator}`;
+                }
 
-                    // Standard prefixing
-                    return `${scope} ${selector} ${separator}`;
-                });
-
-                // Combine
-                const finalCSS = rootOverride + scopedCSS;
-
-                // 4. Output
-                outputArea.value = finalCSS;
-
-                // 5. Update Preview
-                updatePreview(finalCSS, scope);
-
-                // Animation
-                statusLabel.style.opacity = '1';
-                setTimeout(() => statusLabel.style.opacity = '0', 2000);
-
-            } catch (err) {
-                outputArea.value = "Error: " + err.message;
-            }
-        }
-
-        function updatePreview(cssContent, scopeClass) {
-            // Remove old style tag
-            const oldStyle = document.getElementById('preview-style');
-            if (oldStyle) oldStyle.remove();
-
-            // Add new style tag
-            const style = document.createElement('style');
-            style.id = 'preview-style';
-            style.innerHTML = cssContent;
-            document.head.appendChild(style);
-
-            // Apply scope class to wrapper
-            const wrapper = document.getElementById('previewWrapper');
-            // Clean class (remove dot)
-            const cleanClass = scopeClass.replace('.', '');
-            wrapper.className = cleanClass + " p-4 border border-dashed border-slate-300";
-        }
-
-        function copyToClipboard() {
-            const copyText = document.getElementById("outputCSS");
-            copyText.select();
-            navigator.clipboard.writeText(copyText.value).then(() => {
-                alert("CSS Copied!");
+                // Standard prefixing
+                return `${scope} ${selector} ${separator}`;
             });
-        }
-        
-        // Run once on load
-        window.onload = buildTheme;
 
-    </script>
-</body>
-</html>
+            // Combine
+            const finalCSS = rootOverride + scopedCSS;
+
+            // 4. Output
+            outputArea.value = finalCSS;
+
+            // 5. Update Preview
+            updatePreview(finalCSS, scope);
+
+            // Animation
+            statusLabel.style.opacity = '1';
+            setTimeout(() => statusLabel.style.opacity = '0', 2000);
+
+        } catch (err) {
+            outputArea.value = "Error: " + err.message;
+        }
+    }
+
+    function updatePreview(cssContent, scopeClass) {
+        // Remove old style tag
+        const oldStyle = document.getElementById('preview-style');
+        if (oldStyle) oldStyle.remove();
+
+        // Add new style tag
+        const style = document.createElement('style');
+        style.id = 'preview-style';
+        style.innerHTML = cssContent;
+        document.head.appendChild(style);
+
+        // Apply scope class to wrapper
+        const wrapper = document.getElementById('previewWrapper');
+        // Clean class (remove dot)
+        const cleanClass = scopeClass.replace('.', '');
+        wrapper.className = cleanClass + " p-4 border border-dashed border-slate-300";
+    }
+
+    function copyToClipboard() {
+        const copyText = document.getElementById("outputCSS");
+        copyText.select();
+        navigator.clipboard.writeText(copyText.value).then(() => {
+            alert("CSS Copied!");
+        });
+    }
+    
+    // Run once on load
+    window.onload = buildTheme;
+
+</script>
