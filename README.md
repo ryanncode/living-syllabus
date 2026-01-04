@@ -28,161 +28,41 @@ Before you begin, ensure you have these three standard tools installed. They are
 2. **Pandoc:** The engine that converts text formats. [Download here](https://pandoc.org/installing.html).
 3. **Node.js:** The runtime that powers the automation script. [Download here](https://nodejs.org/en/download/).
 
-### 1.3. The Directory Structure
+### 1.3. Get the Toolkit (The "Starter Kit")
 
-Create a new folder for your course (e.g., `My-Course-Syllabus`). Inside, organize your files exactly like this:
+Instead of creating files manually, download the pre-built engine from this repository.
 
-```text
-/My-Course-Syllabus
-│
-├── syllabus.md           <-- YOUR CONTENT (Markdown)
-├── week1-quiz.docx       <-- YOUR CONTENT (Word)
-│
-├── /themes               <-- THE STYLE CLOSET
-│   ├── academic.css      (Serif, Ivy League style)
-│   └── modern.css        (Sans-serif, Startup style)
-│
-├── generate.js           <-- THE ENGINE (Script provided below)
-│
-└── package.json          <-- THE CONFIG (Created automatically)
+1. Scroll to the top of this page.
+2. Click the green **Code** button.
+3. Select **Download ZIP**.
+4. Extract the folder to your computer. Rename it to `My-Course-Syllabus`.
+
+**You now have the complete setup:**
+* `generate.js` (The Engine)
+* `/themes` folder (The Style Closet)
+* `syllabus.md` (A sample file)
+
+### 1.4. Initialization
+
+Open your `My-Course-Syllabus` folder in VS Code. Open the Terminal (**Terminal** -> **New Terminal**) and run these two commands to turn on the engine:
+
+```bash
+npm install
 ```
 
-### 1.4. The Script (`generate.js`)
+*Note: This automatically reads the package.json file included in the kit and installs the necessary tools (Pandoc, Juice, etc.) for you.*
 
-Create a file named `generate.js` in your folder and paste this code. This is the automation engine that "flattens" modern CSS into a format Canvas accepts. It now supports both Markdown (`.md`) and Word (`.docx`) files.
+You are now ready to generate.
 
-```javascript
-const fs = require('fs');
-const juice = require('juice');
-const pandoc = require('node-pandoc');
-const postcss = require('postcss');
-const cssVariables = require('postcss-css-variables');
-const path = require('path');
+### 1.5. Troubleshooting
 
-// Usage: node generate.js <input_file> <theme_name>
-// Example (Markdown): node generate.js week1.md academic
-// Example (Word):     node generate.js syllabus.docx midnight
-
-const args = process.argv.slice(2);
-
-if (args.length < 2) {
-    console.error("❌ Error: Please provide both an input file and a theme.");
-    console.error("   Usage: node generate.js <file.md|file.docx> <theme>");
-    process.exit(1);
-}
-
-const inputFile = args[0];
-const themeName = args[1];
-
-// Generate output name: inputfilename_themename.html
-const baseName = path.basename(inputFile, path.extname(inputFile));
-const outputFile = `${baseName}_${themeName}.html`;
-
-// Theme Resolution Logic
-let cssFile = `${themeName}.css`;
-// Check root first, then themes folder
-if (!fs.existsSync(cssFile)) {
-    if (fs.existsSync(`./themes/${cssFile}`)) {
-         cssFile = `./themes/${cssFile}`;
-    } else {
-        console.error(`❌ Error: Theme file '${themeName}.css' not found in root or /themes.`);
-        process.exit(1);
-    }
-}
-
-async function buildComponent() {
-    console.log(`\n🏗️  Compiling [${inputFile}] with [${themeName.toUpperCase()}] Theme`);
-
-    if (!fs.existsSync(inputFile)) {
-        console.error(`❌ Error: Source file '${inputFile}' not found.`);
-        return;
-    }
-
-    // 1. DETERMINE FILE TYPE & CONVERTER ARGS
-    const fileExt = path.extname(inputFile).toLowerCase();
-    let pandocArgs = '';
-
-    if (fileExt === '.md' || fileExt === '.markdown') {
-        console.log(`   ...Detected Markdown file. Using Markdown converter...`);
-        // --section-divs adds <section> or <div> wrappers around headers, good for styling
-        pandocArgs = '-f markdown -t html5 --wrap=none --section-divs';
-    } else if (fileExt === '.docx') {
-        console.log(`   ...Detected Word document. Using Docx converter...`);
-        pandocArgs = '-f docx -t html5 --wrap=none --section-divs';
-    } else {
-        console.error(`❌ Error: Unsupported file type '${fileExt}'. Please use .md or .docx`);
-        return;
-    }
-
-    // 2. CSS PRE-PROCESSING (The "Flattening" Step)
-    const rawCss = fs.readFileSync(cssFile, 'utf8');
-    
-    // Sanitization: Replace :host with :root and neutralize complex data URIs
-    let sanitizedCss = rawCss.replace(/:host/g, ':root');
-    sanitizedCss = sanitizedCss.replace(/url\("data:[^"]+"\)/g, 'none');
-
-    console.log(`   ...Flattening CSS variables...`);
-    let flatCss = '';
-    
-    try {
-        const result = await postcss([
-            cssVariables({ preserve: false }) 
-        ]).process(sanitizedCss, { from: cssFile, to: undefined });
-        flatCss = result.css;
-    } catch (err) {
-        console.error('❌ CSS Compilation Error:', err);
-        return;
-    }
-
-    // 3. PANDOC CONVERSION (The "Compiler" Step)
-    console.log(`   ...Converting Content to HTML...`);
-    
-    pandoc(inputFile, pandocArgs, (err, htmlContent) => {
-        if (err) {
-            console.error('❌ Pandoc Error:', err);
-            return;
-        }
-
-        // 4. INJECTION (The "Container" Step)
-        // Wraps content in a generic canvas-component div for scoping
-        const wrappedHtml = `
-            <div class="canvas-component" style="max-width: 800px; margin: 0 auto; font-family: sans-serif;">
-                ${htmlContent}
-            </div>
-            `;
-
-        // 5. INLINING (The "Chemical Bonding" Step)
-        // Inlines the flattened CSS directly into the HTML style attributes
-        const finalHtml = juice.inlineContent(wrappedHtml, flatCss, {
-            applyStyleTags: true,
-            removeStyleTags: true,
-            preserveMediaQueries: false, 
-            widthElements: ['table', 'td', 'th'] 
-        });
-
-        // 6. FORENSIC STAMPING
-        const stamp = `<!-- Generated by Canvas Component Engine on ${new Date().toISOString()} -->\n`;
-
-        fs.writeFileSync(outputFile, stamp + finalHtml);
-        console.log(`✅ Success! Component generated: ${outputFile}`);
-        console.log(`👉 Next: Open this file, Select All, and Paste into Canvas HTML Editor.`);
-    });
-}
-
-buildComponent();
-```
-
-### 1.5. Initialization
-
-Once your files are in place, open your terminal in VS Code (Terminal -> New Terminal) and run these two commands to install the necessary libraries. We are also installing `onchange` to enable the "Watcher" workflow (see Phase 3).
+If `npm install` fails or you encounter issues, you can install the required packages manually by running these commands:
 
 ```bash
 npm init -y
 npm install juice node-pandoc postcss postcss-css-variables
 npm install --save-dev onchange
 ```
-
-You are now ready to generate.
 
 ---
 
