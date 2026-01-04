@@ -1,0 +1,12 @@
+# Node.js Dependencies (CRITICAL: Do not commit this)
+node_modules/
+
+# Jekyll/Site Build Artifacts (You only commit the source in /docs, not the build)
+_site/
+.sass-cache/
+.jekyll-cache/
+.jekyll-metadata
+
+# OS Generated Files
+.DS_Store
+Thumbs.db

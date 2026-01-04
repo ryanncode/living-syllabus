@@ -1,0 +1,33 @@
+{
+  "name": "living-syllabus",
+  "version": "1.0.0",
+  "description": "> **Compatibility Note:** While this guide focuses on **Canvas**, this tool produces standard, flat HTML5 that works equally well in **Blackboard**, **Moodle**, **Brightspace (D2L)**, and any other LMS that accepts HTML input.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ryanncode/living-syllabus.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ryanncode/living-syllabus/issues"
+  },
+  "homepage": "https://github.com/ryanncode/living-syllabus#readme",
+  "dependencies": {
+    "juice": "^11.0.3",
+    "node-pandoc": "^0.3.0",
+    "postcss": "^8.5.6",
+    "postcss-css-variables": "^0.19.0"
+  },
+  "devDependencies": {
+    "onchange": "^7.1.0"
+  }
+}
