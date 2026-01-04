@@ -3,6 +3,7 @@ layout: default
 title: Generate
 ---
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
@@ -61,7 +62,7 @@ title: Generate
         </header>
 
         <div class="mb-8 border-b border-slate-200 pb-4">
-            <p class="text-slate-600 mt-2">Upload a .docx file. Pick a Theme. Get Clean Code.</p>
+            <p class="text-slate-600 mt-2">Upload a .docx or .md file. Pick a Theme. Get Clean Code.</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -83,8 +84,8 @@ title: Generate
             </div>
             
             <div>
-                <label class="block text-sm font-semibold mb-2">2. Upload Word Doc (.docx)</label>
-                <input type="file" id="uploadInput" accept=".docx" class="block w-full text-sm text-slate-500
+                <label class="block text-sm font-semibold mb-2">2. Upload File (.docx or .md)</label>
+                <input type="file" id="uploadInput" accept=".docx, .md, .markdown" class="block w-full text-sm text-slate-500
                     file:mr-4 file:py-3 file:px-4
                     file:rounded-full file:border-0
                     file:text-sm file:font-semibold
@@ -98,7 +99,7 @@ title: Generate
             <div id="preview" class="flex-1 w-full p-8 border border-slate-300 rounded bg-white overflow-y-auto shadow-sm">
                 <div class="text-center mt-20 text-gray-400">
                     <p class="text-xl">Waiting for file...</p>
-                    <p class="text-sm mt-2">Select a .docx file to see the result here.</p>
+                    <p class="text-sm mt-2">Select a file to see the result here.</p>
                 </div>
             </div>
             
@@ -139,22 +140,31 @@ title: Generate
         if (!file) return;
 
         const reader = new FileReader();
-        reader.onload = function(loadEvent) {
-            const arrayBuffer = loadEvent.target.result;
-            mammoth.convertToHtml({arrayBuffer: arrayBuffer})
-                .then(result => {
-                    lastRawHTML = result.value; 
-                    displayResult(result);
-                })
-                .catch(handleError);
-        };
-        reader.readAsArrayBuffer(file);
-    });
+        const extension = file.name.split('.').pop().toLowerCase();
 
-    function displayResult(result) {
-        if(result.messages.length > 0) console.log("Mammoth Warnings:", result.messages);
-        applyTheme(lastRawHTML);
-    }
+        if (extension === 'docx') {
+            reader.onload = function(loadEvent) {
+                const arrayBuffer = loadEvent.target.result;
+                mammoth.convertToHtml({arrayBuffer: arrayBuffer})
+                    .then(result => {
+                        if(result.messages.length > 0) console.log("Mammoth Warnings:", result.messages);
+                        lastRawHTML = result.value; 
+                        applyTheme(lastRawHTML);
+                    })
+                    .catch(handleError);
+            };
+            reader.readAsArrayBuffer(file);
+        } else if (extension === 'md' || extension === 'markdown') {
+            reader.onload = function(loadEvent) {
+                const text = loadEvent.target.result;
+                lastRawHTML = marked.parse(text);
+                applyTheme(lastRawHTML);
+            };
+            reader.readAsText(file);
+        } else {
+            alert("Unsupported file type. Please upload .docx or .md");
+        }
+    });
 
     async function applyTheme(htmlContent) {
         const themeFilename = document.getElementById('themeSelector').value;

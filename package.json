@@ -22,10 +22,12 @@
   },
   "homepage": "https://github.com/ryanncode/living-syllabus#readme",
   "dependencies": {
+    "cssnano": "^7.1.2",
     "juice": "^11.0.3",
     "node-pandoc": "^0.3.0",
     "postcss": "^8.5.6",
-    "postcss-css-variables": "^0.19.0"
+    "postcss-css-variables": "^0.19.0",
+    "postcss-prefix-selector": "^2.1.1"
   },
   "devDependencies": {
     "onchange": "^7.1.0"
