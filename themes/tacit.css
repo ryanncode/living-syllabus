@@ -1,0 +1,148 @@
+/* Tacit CSS (Canvas Safe Edition) */
+
+/* 1. Typography & Global Reset */
+body {
+  font-family: system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: #333;
+  background-color: transparent;
+  padding: 1rem;
+}
+
+/* 2. Headings */
+h1, h2, h3, h4, h5, h6 {
+  color: #000;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+h1 { font-size: 2.25rem; font-weight: 500; }
+h2 { font-size: 1.75rem; border-bottom: 1px solid #ddd; padding-bottom: 0.5rem; }
+h3 { font-size: 1.5rem; }
+h4 { font-size: 1.25rem; }
+h5 { font-size: 1rem; text-transform: uppercase; font-weight: bold; }
+h6 { font-size: 0.9rem; text-transform: uppercase; color: #595959; font-weight: bold; }
+
+/* 3. Links */
+a {
+  color: #275a90; /* Tacit Blue */
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* 4. Tables (The Tacit Look) */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 2rem;
+  border-spacing: 0;
+  table-layout: fixed; /* Ensures content doesn't break layout */
+}
+
+th {
+  text-align: left;
+  border-bottom: 2px solid #595959;
+  border-left: 1px solid #cccccc;
+  padding: 0.5rem;
+  font-weight: 600;
+}
+th:first-child { border-left: 0; }
+
+td {
+  border-bottom: 1px solid #eee;
+  padding: 0.5rem;
+  vertical-align: top;
+  word-wrap: break-word;
+}
+
+tr:hover td {
+  background-color: #f9f9f9;
+}
+
+/* 5. Block Elements */
+p, ul, ol, dl, blockquote, pre {
+  margin-bottom: 1.5rem;
+}
+
+blockquote {
+  border-left: 0.25rem solid #595959;
+  padding: 0.5rem 1rem;
+  margin-left: 0;
+  color: #555;
+  background: transparent;
+}
+
+/* 6. Code & Preformatted */
+pre {
+  border-left: 0.25rem solid #88c072; /* Tacit Green Accent */
+  background-color: rgba(127, 127, 127, 0.05);
+  padding: 1rem;
+  overflow-x: auto;
+  font-family: Menlo, Monaco, Consolas, monospace;
+}
+
+code, kbd {
+  font-family: Menlo, Monaco, Consolas, monospace;
+  font-size: 0.9em;
+  padding: 0.2em 0.4em;
+  background-color: #daf1df; /* Light Green */
+  color: #2a6f3b; /* Dark Green */
+  border-radius: 3px;
+}
+
+/* 7. Forms & Inputs */
+input, textarea, select {
+  display: block;
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #595959;
+  border-radius: 3px;
+  background-color: transparent;
+  color: inherit;
+}
+
+button, input[type="submit"] {
+  background-color: #275a90;
+  color: #fff !important;
+  border: 1px solid #275a90;
+  padding: 0.5rem 1.5rem;
+  border-radius: 3px;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 1rem;
+}
+
+button:hover, input[type="submit"]:hover {
+  background-color: #1a436e;
+}
+
+/* 8. Misc */
+hr {
+  border: 0;
+  border-bottom: 1px solid #595959;
+  margin: 2.5rem 0;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  display: block;
+}
+
+figure {
+  margin: 2rem 0;
+  text-align: center;
+}
+
+figcaption {
+  font-size: 0.9rem;
+  color: #595959;
+  margin-top: 0.5rem;
+}

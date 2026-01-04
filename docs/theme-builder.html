@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Classless Theme Builder
+title: Theme Builder
 ---
 <script src="https://cdn.tailwindcss.com"></script>
 
@@ -42,15 +42,26 @@ title: Classless Theme Builder
 
 <div class="tool-wrapper full-width">
     <div class="max-w-4xl mx-auto">
+        <header id="gh-navigation" class="gh-navigation is-left-logo has-accent-color gh-outer is-dropdown-loaded" style="margin-bottom: 2rem;">
+            <div class="gh-navigation-inner gh-inner" style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="gh-navigation-brand">
+                    <a class="gh-navigation-logo is-title" href="index.html" style="font-weight: 800; font-size: 1.5rem; color: #15171a; text-decoration: none;">
+                        Thinghood Limited
+                    </a>
+                </div>
+                <nav class="gh-navigation-menu">
+                    <ul class="nav" style="display: flex; gap: 20px; list-style: none; margin: 0; padding: 0;">
+                        <li class="nav-home"><a href="index.html" style="color: #15171a; opacity: 0.8; font-weight: 500;">Home</a></li>
+                        <li class="nav-converter"><a href="generate.html" style="color: #15171a; opacity: 0.8; font-weight: 500;">Generate</a></li>
+                        <li class="nav-builder nav-current"><a href="theme-builder.html" style="color: #15171a; font-weight: 700;">Theme Builder</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
         <div class="mb-8 border-b border-slate-200 pb-4 flex justify-between items-end">
             <div>
-                <h1 class="text-3xl font-bold text-slate-900">Classless Theme Builder</h1>
                 <p class="text-slate-600 mt-2">Customize and "Scope" CSS themes for the LMS.</p>
-            </div>
-            <div class="text-sm space-x-4">
-                <a href="generate.html" class="text-slate-500 hover:text-blue-600 transition">Word Converter</a>
-                <span class="text-slate-300">|</span>
-                <a href="#" class="text-blue-600 font-bold">Theme Builder</a>
             </div>
         </div>
 

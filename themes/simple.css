@@ -1,0 +1,143 @@
+/* Simple CSS (Canvas Safe Edition) */
+
+/* 1. Typography & Global Reset */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir, "Nimbus Sans L", Roboto, "Noto Sans", "Segoe UI", Arial, Helvetica, "Helvetica Neue", sans-serif;
+  line-height: 1.5;
+  color: inherit; /* Let Canvas decide text color */
+  background-color: transparent;
+  font-size: 1.15rem;
+}
+
+/* 2. Headers */
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 2rem;
+  line-height: 1.1;
+  color: inherit;
+  font-weight: 700;
+}
+
+h1 { font-size: 3rem; margin-bottom: 1.5rem; }
+h2 { font-size: 2.6rem; margin-top: 3rem; }
+h3 { font-size: 2rem; margin-top: 3rem; }
+h4 { font-size: 1.44rem; }
+h5 { font-size: 1.15rem; }
+
+/* 3. Links and Accents */
+a {
+  color: #0d47a1; /* Simple.css Blue */
+  text-decoration: underline;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+/* 4. Block Elements (Adaptive Grey) */
+/* We use low opacity grey to distinct blocks without solid backgrounds */
+aside, pre, code, blockquote, .notice, details {
+  background-color: rgba(127, 127, 127, 0.1); 
+  border: 1px solid rgba(127, 127, 127, 0.2);
+  border-radius: 5px; /* Simple standard radius */
+  margin-bottom: 1rem;
+  color: inherit;
+}
+
+/* Specific Block Styling */
+blockquote {
+  margin: 2rem 0;
+  padding: 1rem;
+  border-left: 0.35rem solid #0d47a1; /* Blue accent */
+  font-style: italic;
+}
+
+pre {
+  padding: 1rem;
+  overflow-x: auto;
+}
+
+code {
+  font-family: Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+  padding: 0.2rem 0.4rem;
+  font-size: 0.9em;
+}
+
+aside {
+  padding: 1rem;
+  font-size: 1rem;
+}
+
+/* 5. Tables */
+table {
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid rgba(127, 127, 127, 0.2);
+  text-align: left;
+  padding: 0.5rem;
+}
+
+th {
+  background-color: rgba(127, 127, 127, 0.1);
+  font-weight: bold;
+}
+
+/* Adaptive Zebra Striping */
+tr:nth-child(even) {
+  background-color: rgba(127, 127, 127, 0.05);
+}
+
+/* 6. Buttons */
+/* We keep buttons solid blue because they need to be distinct action items */
+button, .button, input[type="submit"] {
+  display: inline-block;
+  border: 1px solid #0d47a1;
+  background-color: #0d47a1;
+  color: #ffffff !important; /* Force white text */
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  border-radius: 5px;
+  cursor: pointer;
+  line-height: normal;
+  font-size: 1rem;
+  margin-right: 0.5rem;
+}
+
+button:hover, .button:hover {
+  background-color: #1266e2;
+  border-color: #1266e2;
+}
+
+/* 7. Forms */
+input, textarea, select {
+  padding: 0.5rem;
+  border: 1px solid rgba(127, 127, 127, 0.4);
+  border-radius: 5px;
+  background-color: transparent;
+  color: inherit;
+  margin-bottom: 0.5rem;
+  max-width: 100%;
+}
+
+/* 8. Images */
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px;
+}
+
+mark {
+  background-color: #ffdd33;
+  color: #212121;
+  padding: 2px 5px;
+  border-radius: 2px;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid rgba(127, 127, 127, 0.3);
+  margin: 2rem 0;
+}

@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Word to Canvas Converter
+title: Generate
 ---
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <script src="https://cdn.tailwindcss.com"></script>
@@ -43,8 +43,24 @@ title: Word to Canvas Converter
 
 <div class="tool-wrapper full-width">
     <div class="max-w-4xl mx-auto">
+        <header id="gh-navigation" class="gh-navigation is-left-logo has-accent-color gh-outer is-dropdown-loaded" style="margin-bottom: 2rem;">
+            <div class="gh-navigation-inner gh-inner" style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="gh-navigation-brand">
+                    <a class="gh-navigation-logo is-title" href="index.html" style="font-weight: 800; font-size: 1.5rem; color: #15171a; text-decoration: none;">
+                        Living Syllabus
+                    </a>
+                </div>
+                <nav class="gh-navigation-menu">
+                    <ul class="nav" style="display: flex; gap: 20px; list-style: none; margin: 0; padding: 0;">
+                        <li class="nav-home"><a href="index.html" style="color: #15171a; opacity: 0.8; font-weight: 500;">Home</a></li>
+                        <li class="nav-converter nav-current"><a href="generate.html" style="color: #15171a; font-weight: 700;">Generate</a></li>
+                        <li class="nav-builder"><a href="theme-builder.html" style="color: #15171a; opacity: 0.8; font-weight: 500;">Theme Builder</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
         <div class="mb-8 border-b border-slate-200 pb-4">
-            <h1 class="text-3xl font-bold text-slate-900">Word to Canvas Converter</h1>
             <p class="text-slate-600 mt-2">Upload a .docx file. Pick a Theme. Get Clean Code.</p>
         </div>
 
@@ -52,9 +68,17 @@ title: Word to Canvas Converter
             <div>
                 <label class="block text-sm font-semibold mb-2">1. Select Theme</label>
                 <select id="themeSelector" class="w-full p-3 border border-slate-300 rounded bg-white focus:ring-2 focus:ring-blue-500 outline-none">
-                    <option value="academic">Ivy League (Georgia/Serif)</option>
-                    <option value="modern">Startup Mode (Sans-Serif)</option>
-                    <option value="brutalist">New Brutalist (Bold/High Contrast)</option>
+                    <option value="simple.css">Simple (Academic/Blog)</option>
+                    <option value="water.css">Water (Clean/Invisible)</option>
+                    <option value="pico-green.css">Pico Green (Modern/SaaS)</option>
+                    <option value="tufte.css">Tufte (Edward Tufte Style)</option>
+                    <option value="latex.css">LaTeX (Scientific Paper)</option>
+                    <option value="sakura.css">Sakura (Minimalist)</option>
+                    <option value="paper.css">Paper (Notebook Style)</option>
+                    <option value="tacit.css">Tacit (No-Class)</option>
+                    <option value="bahunya.css">Bahunya (Responsive)</option>
+                    <option value="marx.css">Marx (Stylish Reset)</option>
+                    <option value="mcss.css">mCSS (Micro CSS)</option>
                 </select>
             </div>
             
@@ -92,51 +116,22 @@ title: Word to Canvas Converter
 
 <script>
     // A. The Themes: CSS Inliner Rules
-    const themes = {
-        academic: {
-            container: "font-family: Georgia, serif; line-height: 1.6; color: #111; max-width: 800px; margin: 0 auto;",
-            h1: "font-family: Arial, sans-serif; font-weight: 900; font-size: 2.2em; border-bottom: 2px solid #333; margin-top: 2rem; margin-bottom: 1rem;",
-            h2: "font-family: Arial, sans-serif; font-weight: 700; font-size: 1.5em; border-bottom: 1px solid #ccc; margin-top: 1.5rem;",
-            h3: "font-family: Arial, sans-serif; font-weight: 600; font-size: 1.25em; margin-top: 1.25rem; opacity: 0.9;",
-            p: "margin-bottom: 1rem;",
-            ul: "margin-left: 1.5rem; margin-bottom: 1rem;",
-            ol: "margin-left: 1.5rem; margin-bottom: 1rem;",
-            li: "margin-bottom: 0.5rem;",
-            a: "color: #0056b3; text-decoration: underline;",
-            table: "width: 100%; border-collapse: collapse; margin-bottom: 1rem;",
-            td: "border: 1px solid #ddd; padding: 8px;",
-            th: "border: 1px solid #ddd; padding: 8px; font-weight: bold; text-align: left;"
-        },
-        modern: {
-            container: "font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #374151; max-width: 800px; margin: 0 auto;",
-            h1: "font-weight: 800; font-size: 2.25em; letter-spacing: -0.025em; color: #111827; margin-bottom: 1rem;",
-            h2: "font-weight: 700; font-size: 1.5em; color: #1f2937; margin-top: 2rem; border-left: 4px solid #3b82f6; padding-left: 1rem;",
-            h3: "font-weight: 600; font-size: 1.25em; color: #374151; margin-top: 1.5rem;",
-            p: "margin-bottom: 1.5rem;",
-            ul: "margin-left: 1.5rem; list-style-type: disc; margin-bottom: 1.5rem;",
-            ol: "margin-left: 1.5rem; list-style-type: decimal; margin-bottom: 1.5rem;",
-            a: "color: #2563eb; text-decoration: none; font-weight: 600;",
-            table: "width: 100%; border-collapse: collapse; margin-bottom: 1.5rem;",
-            td: "border-bottom: 1px solid #e5e7eb; padding: 12px;",
-            th: "border-bottom: 2px solid #e5e7eb; padding: 12px; font-weight: 600; text-align: left;"
-        },
-        brutalist: {
-            container: "font-family: 'Courier New', monospace; line-height: 1.4; color: #000; max-width: 800px; margin: 0 auto; border: 2px solid black; padding: 2rem;",
-            h1: "font-family: Arial Black, sans-serif; text-transform: uppercase; font-size: 3em; background: #000; color: #fff; padding: 10px; margin-bottom: 20px;",
-            h2: "font-weight: bold; border: 2px solid black; padding: 5px 10px; display: inline-block; margin-top: 30px; margin-bottom: 10px; background: #ffff00;",
-            h3: "font-weight: bold; text-decoration: underline; margin-top: 20px;",
-            p: "margin-bottom: 20px;",
-            ul: "margin-left: 20px; margin-bottom: 20px; list-style-type: square;",
-            ol: "margin-left: 20px; margin-bottom: 20px;",
-            a: "background: #000; color: #fff; padding: 2px 5px; text-decoration: none;",
-            table: "width: 100%; border: 2px solid black; margin-bottom: 20px;",
-            td: "border: 1px solid black; padding: 10px;",
-            th: "border: 2px solid black; padding: 10px; font-weight: bold; text-transform: uppercase;"
-        }
-    };
+    // Instead of hardcoding rules, we will fetch the actual CSS file content
+    
+    // Helper to map filenames to local paths
+    // Since the user downloads the whole repo, we can fetch relative to the docs folder.
+    // The structure is:
+    // root/
+    //   themes/ (where the css files are)
+    //   docs/
+    //     generate.html
+    // So the path to themes from generate.html is "../themes/"
+    function getThemeUrl(filename) {
+        return "../themes/" + filename;
+    }
 
     let generatedHTML = "";
-    let lastRawHTML = ""; // To store the raw conversion for theme switching
+    let lastRawHTML = ""; 
 
     // B. The Listener
     document.getElementById('uploadInput').addEventListener('change', function(event) {
@@ -144,66 +139,105 @@ title: Word to Canvas Converter
         if (!file) return;
 
         const reader = new FileReader();
-        
-        // Mammoth requires an ArrayBuffer
         reader.onload = function(loadEvent) {
             const arrayBuffer = loadEvent.target.result;
-            
-            // C. The Engine: Convert Docx -> Raw HTML
             mammoth.convertToHtml({arrayBuffer: arrayBuffer})
                 .then(result => {
-                    lastRawHTML = result.value; // Store raw result
+                    lastRawHTML = result.value; 
                     displayResult(result);
                 })
                 .catch(handleError);
         };
-        
         reader.readAsArrayBuffer(file);
     });
 
     function displayResult(result) {
-        // Check for warnings (optional, but good for debugging)
-        if(result.messages.length > 0) {
-            console.log("Mammoth Warnings:", result.messages);
-        }
+        if(result.messages.length > 0) console.log("Mammoth Warnings:", result.messages);
         applyTheme(lastRawHTML);
     }
 
-    function applyTheme(htmlContent) {
-        const themeKey = document.getElementById('themeSelector').value;
-        const style = themes[themeKey];
+    async function applyTheme(htmlContent) {
+        const themeFilename = document.getElementById('themeSelector').value;
+        const statusLabel = document.getElementById('preview'); 
+        
+        // Show loading state in preview
+        statusLabel.innerHTML = `<div class="text-center mt-20 text-gray-400"><p class="text-xl">Fetching ${themeFilename}...</p></div>`;
 
-        // Create wrapper to parse string into DOM
+        const cssUrl = getThemeUrl(themeFilename);
+        let cssContent = "";
+        
+        try {
+            if (themeFilename) {
+                const response = await fetch(cssUrl);
+                if (!response.ok) throw new Error("Failed to load theme");
+                cssContent = await response.text();
+            } else {
+                 console.warn("No theme selected, defaulting to no style.");
+            }
+        } catch (e) {
+            console.error(e);
+            // Non-blocking error: allow generation to proceed without theme
+            cssContent = "/* Theme file not found or load failed. Content generated without specific styling. */";
+        }
+
+        // Create wrapper
         const wrapper = document.createElement('div');
         wrapper.innerHTML = htmlContent;
 
-        // Apply Container Style
+        // Apply Container Style (Generic safe default for all classless themes)
         const container = document.createElement('div');
-        container.setAttribute('style', style.container);
-
-        // Apply Tag Styles (The Inliner)
-        // We loop through all relevant tags to apply the theme's CSS inline
-        ['h1', 'h2', 'h3', 'p', 'ul', 'ol', 'li', 'a', 'table', 'td', 'th'].forEach(tag => {
-            const elements = wrapper.getElementsByTagName(tag);
-            for (let el of elements) {
-                if (style[tag]) {
-                    const currentStyle = el.getAttribute('style') || "";
-                    el.setAttribute('style', style[tag] + currentStyle);
-                }
-            }
-        });
-
-        // Re-render
+        container.setAttribute('style', "max-width: 800px; margin: 0 auto;");
+        
+        // SCOPED CSS INJECTION
+        // We inject the fetched CSS into a style block.
+        // To prevent it from affecting the rest of the page (if pasted into a messy LMS), 
+        // we ideally scope it. However, most classless themes target bare tags (h1, p).
+        // The best strategy for "Clean Code" is to provide the style block + the content.
+        
+        const scopedStyle = `
+<style>
+/* Theme: ${themeFilename} */
+.canvas-component-wrapper {
+    font-family: system-ui, -apple-system, sans-serif;
+    line-height: 1.5;
+}
+/* Note: These styles are global within this scope. 
+   When pasting to Canvas, they may affect other parts of the page 
+   if not carefully managed, but this is the nature of Classless CSS. */
+${cssContent}
+</style>
+`;
+        
+        // Wrap the content
+        container.className = "canvas-component-wrapper";
         container.innerHTML = wrapper.innerHTML;
-        generatedHTML = container.outerHTML;
-        document.getElementById('preview').innerHTML = generatedHTML;
+        
+        // PREVIEW RENDERING (Shadow DOM to prevent bleeding)
+        const previewEl = document.getElementById('preview');
+        // Reset preview
+        previewEl.innerHTML = "";
+        
+        // We use a Shadow Root to truly isolate the preview styles from the tool's UI
+        // This ensures the "water.css" or "simple.css" doesn't wreck our sidebar or header.
+        if (!previewEl.shadowRoot) {
+            previewEl.attachShadow({mode: 'open'});
+        }
+        
+        // Inject into Shadow DOM
+        previewEl.shadowRoot.innerHTML = `
+            ${scopedStyle}
+            <div class="canvas-component-wrapper">
+                ${wrapper.innerHTML}
+            </div>
+        `;
+        
+        // OUTPUT GENERATION
+        // For the user to copy, we provide the HTML with the embedded style block.
+        generatedHTML = `<!-- Theme: ${themeFilename} -->\n${scopedStyle}\n<div class="canvas-component-wrapper">\n${wrapper.innerHTML}\n</div>`;
     }
 
-    // Re-run styling if they change the dropdown
     document.getElementById('themeSelector').addEventListener('change', function() {
-        if(lastRawHTML) {
-            applyTheme(lastRawHTML);
-        }
+        if(lastRawHTML) applyTheme(lastRawHTML);
     });
 
     function handleError(err) {
@@ -217,7 +251,7 @@ title: Word to Canvas Converter
             return;
         }
         navigator.clipboard.writeText(generatedHTML).then(() => {
-            alert("HTML Code Copied to Clipboard!\n\nNext Step: Go to Canvas, click the </> icon, and paste.");
+            alert("HTML Code Copied to Clipboard!");
         });
     }
 </script>

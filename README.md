@@ -3,7 +3,7 @@
 | **Resource** | **Description** |
 | :--- | :--- |
 | **[Living Syllabus Blog](https://thing.rodeo/living-syllabus/)** | The main project documentation and philosophy. |
-| **[Word to Canvas Converter](https://ryanncode.github.io/living-syllabus/generate.html)** | Convert Word Docs (.docx) to clean, styled HTML code. |
+| **[Generate](https://ryanncode.github.io/living-syllabus/generate.html)** | Convert Markdown (.md) and Word Docs (.docx) to clean, styled HTML code. |
 | **[Theme Builder](https://ryanncode.github.io/living-syllabus/theme-builder.html)** | Create custom CSS themes for your syllabus components. |
 
 ## Phase 1: The Setup (Installation & Workflow)

@@ -1,0 +1,194 @@
+/* m.css (Canvas Safe Edition) */
+
+/* 1. Typography & Reset */
+/* We default to Georgia to maintain the "Manuscript" look */
+body {
+  font-family: "Georgia", serif;
+  font-size: 1.1rem;
+  line-height: 1.5;
+  color: inherit;
+  background-color: transparent;
+  max-width: 70ch; /* Optimal reading width */
+  margin: 0 auto;
+}
+
+/* 2. Headings (The m.css Signature) */
+/* Tight line-heights and massive scale */
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Georgia", serif;
+  font-weight: normal; /* m.css uses normal weight headers */
+  line-height: 1.1;
+  color: inherit;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+}
+
+h1 { font-size: 3rem; }
+h2 { font-size: 2.2rem; }
+h3 { font-size: 1.8rem; }
+h4 { font-size: 1.5rem; }
+h5 { font-size: 1.2rem; font-weight: bold; }
+h6 { font-size: 1rem; font-style: italic; }
+
+/* 3. Links */
+a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-style: solid;
+  text-decoration-color: crimson; /* The m.css accent */
+  text-underline-offset: 0.2em;
+}
+
+a:hover {
+  background-color: rgba(220, 20, 60, 0.1); /* Faint crimson background */
+}
+
+/* 4. Block Elements (Vertical Rhythm) */
+p {
+  margin-bottom: 1.5rem;
+}
+
+/* Indent subsequent paragraphs (Manuscript style) */
+p + p {
+  text-indent: 1.5rem;
+  margin-top: 0;
+}
+
+blockquote {
+  margin: 2rem 0;
+  padding-left: 1.5rem;
+  border-left: 2px solid crimson; /* Crimson accent */
+  font-style: italic;
+  color: rgba(127, 127, 127, 0.9);
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(127, 127, 127, 0.5), transparent);
+  margin: 3rem 0;
+}
+
+/* 5. Code & Preformatted */
+/* m.css distinctive feature: Code has a dashed crimson underline */
+code {
+  font-family: Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.9em;
+  padding: 0.1rem 0.3rem;
+  text-decoration: underline;
+  text-decoration-style: dashed;
+  text-decoration-color: crimson;
+  text-underline-offset: 0.2em;
+}
+
+pre {
+  background-color: rgba(127, 127, 127, 0.05);
+  padding: 1.5rem;
+  overflow-x: auto;
+  border-left: 4px solid crimson; /* Crimson marker */
+  margin-bottom: 2rem;
+}
+
+pre code {
+  text-decoration: none; /* No underline inside block code */
+  background: none;
+  padding: 0;
+}
+
+/* 6. Tables */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 2rem 0;
+  font-size: 0.95rem;
+}
+
+th, td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(127, 127, 127, 0.3);
+}
+
+th {
+  font-weight: bold;
+  border-bottom: 2px solid rgba(127, 127, 127, 0.8);
+}
+
+/* 7. Forms & Inputs */
+input, select, textarea {
+  display: block;
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(127, 127, 127, 0.4);
+  background-color: transparent;
+  border-radius: 0; /* Manuscript style implies sharp edges */
+  font-family: inherit;
+}
+
+button {
+  cursor: pointer;
+  padding: 0.5rem 1.5rem;
+  background-color: transparent;
+  border: 1px solid crimson;
+  color: crimson;
+  font-weight: bold;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+button:hover {
+  background-color: crimson;
+  color: white;
+}
+
+/* 8. Lists */
+ul, ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+li {
+  margin-bottom: 0.5rem;
+}
+
+/* 9. Images */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 2rem auto;
+  border: 1px solid rgba(127, 127, 127, 0.2);
+}
+
+figcaption {
+  text-align: center;
+  font-size: 0.85rem;
+  color: rgba(127, 127, 127, 0.8);
+  margin-top: 0.5rem;
+  font-family: "Verdana", sans-serif; /* Contrast font for captions */
+}
+
+/* 10. Details/Summary */
+details {
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  border: 1px solid rgba(127, 127, 127, 0.2);
+}
+
+summary {
+  cursor: pointer;
+  font-weight: bold;
+  list-style: none;
+}
+
+summary::after {
+  content: "+"; 
+  float: right;
+  font-weight: bold;
+}
+
+details[open] summary::after {
+  content: "-";
+}

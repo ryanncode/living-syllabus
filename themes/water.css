@@ -1,0 +1,88 @@
+/* Water Theme (Adaptive Transparency Edition) */
+
+/* 1. Reset & Inheritance */
+/* We remove specific color/background declarations to let Canvas control defaults */
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  line-height: 1.4;
+  background-color: transparent; /* Allows Canvas background to show */
+  color: inherit; /* Adopts Canvas text color (black or white) */
+}
+
+/* 2. Typography */
+/* Remove hardcoded blacks/whites. Let the browser decide. */
+h1, h2, h3, h4, h5, h6 {
+  margin-bottom: 12px;
+  margin-top: 24px;
+  font-weight: 600;
+  color: inherit; 
+}
+
+h1 { font-size: 2.2em; }
+
+/* 3. Links */
+/* We do not style color here, so it uses the Canvas global link color (usually blue or high-contrast) */
+a {
+  text-decoration: none;
+  font-weight: 600;
+}
+a:hover { text-decoration: underline; }
+
+/* 4. Block Elements (The Transparency Trick) */
+/* We use neutral grey (127,127,127) at low opacity. */
+
+blockquote {
+  border-left: 4px solid rgba(0, 150, 191, 0.5); /* Semi-transparent Cyan */
+  margin: 1.5em 0;
+  padding: 0.5em 1em;
+  font-style: italic;
+  background: rgba(127, 127, 127, 0.1); /* Adapts to light or dark */
+}
+
+code, samp, kbd {
+  background: rgba(127, 127, 127, 0.15);
+  padding: 2.5px 5px;
+  border-radius: 6px;
+  font-size: 1em;
+  font-family: monospace;
+  color: inherit;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid rgba(127, 127, 127, 0.3);
+  margin: 20px 0;
+}
+
+/* 5. Tables */
+table {
+  border-collapse: collapse;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+td, th {
+  padding: 6px;
+  text-align: left;
+  border-bottom: 1px solid rgba(127, 127, 127, 0.3);
+}
+
+/* Zebra Striping using transparency */
+tr:nth-child(even) {
+  background-color: rgba(127, 127, 127, 0.07);
+}
+
+/* 6. Buttons */
+button, input[type='submit'] {
+  background-color: rgba(127, 127, 127, 0.15);
+  color: inherit;
+  padding: 10px 30px;
+  border: 1px solid rgba(127, 127, 127, 0.3);
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+button:hover {
+  background-color: rgba(127, 127, 127, 0.25);
+}

@@ -1,0 +1,143 @@
+/* LaTeX CSS (Canvas Safe Edition) */
+
+/* 1. Typography */
+/* We mimic Computer Modern using standard serifs */
+body, p, h1, h2, h3, h4, h5, h6, td, th, li, a {
+  font-family: "Latin Modern", "Computer Modern", "Times New Roman", Times, Georgia, serif;
+  line-height: 1.8;
+  color: inherit;
+  background-color: transparent;
+  font-size: 1.1rem;
+  text-align: justify; /* The signature LaTeX look */
+  hyphens: auto;
+}
+
+/* 2. Headings */
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+  font-weight: bold;
+  color: inherit;
+}
+
+h1 { font-size: 2.5rem; text-align: center; margin-bottom: 2rem; }
+h2 { font-size: 1.8rem; border-bottom: 1px solid rgba(127,127,127, 0.3); padding-bottom: 0.5rem; }
+h3 { font-size: 1.4rem; }
+h4 { font-size: 1.2rem; }
+
+/* 3. Links */
+a {
+  color: #004098; /* Classic Academic Link Blue */
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* 4. Abstract / Metadata */
+.abstract, .author, .date {
+  text-align: center;
+  margin: 1rem 0;
+  font-style: italic;
+  color: rgba(127, 127, 127, 0.8);
+}
+
+/* 5. Theorems & Proofs (Simulated) */
+/* Canvas strips CSS counters, so we style the blocks to look distinct */
+.theorem, .lemma, .definition, blockquote {
+  margin: 1.5rem 0;
+  font-style: italic;
+  padding: 0.5rem 1rem;
+  border-left: 3px solid rgba(127, 127, 127, 0.3);
+  background-color: rgba(127, 127, 127, 0.05); /* Adaptive Grey */
+  border-radius: 2px;
+}
+
+/* We force a bold label visual if the user writes "Theorem:" in text */
+strong {
+  font-weight: bold;
+}
+
+.proof {
+  font-style: normal;
+  margin: 1.5rem 0;
+}
+.proof::before {
+  content: "Proof. ";
+  font-style: italic;
+  font-weight: bold;
+}
+.proof::after {
+  content: " ∎"; /* QED Symbol */
+  float: right;
+}
+
+/* 6. Tables (Booktabs Style) */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  margin: 2rem 0;
+  border-top: 2px solid rgba(127, 127, 127, 0.8); /* Top thick rule */
+  border-bottom: 2px solid rgba(127, 127, 127, 0.8); /* Bottom thick rule */
+}
+
+th {
+  border-bottom: 1px solid rgba(127, 127, 127, 0.5); /* Mid rule */
+  padding: 0.5rem;
+  text-align: left;
+  font-weight: bold;
+}
+
+td {
+  padding: 0.5rem;
+  text-align: left;
+}
+
+/* 7. Code & Preformatted */
+pre, code, kbd {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.9em;
+}
+
+pre {
+  background-color: rgba(127, 127, 127, 0.1);
+  padding: 1rem;
+  overflow-x: auto;
+  border: 1px solid rgba(127, 127, 127, 0.2);
+  border-radius: 4px;
+  margin: 1.5rem 0;
+}
+
+code {
+  background-color: rgba(127, 127, 127, 0.1);
+  padding: 0.1rem 0.3rem;
+  border-radius: 2px;
+}
+
+/* 8. Images & Figures */
+figure {
+  margin: 2rem 0;
+  text-align: center;
+}
+
+figcaption {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: rgba(127, 127, 127, 0.8);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+/* 9. Misc */
+hr {
+  border: 0;
+  height: 1px;
+  background: rgba(127, 127, 127, 0.3);
+  margin: 2rem 0;
+}

@@ -1,0 +1,121 @@
+/* Paper CSS (Canvas Safe Edition) */
+
+/* 1. Typography */
+/* We attempt to load the sketchy fonts, but fallback to "Comic Sans" style if blocked */
+@import url('https://fonts.googleapis.com/css?family=Neucha|Patrick+Hand+SC&display=swap');
+
+body {
+  font-family: 'Neucha', 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif;
+  line-height: 1.5;
+  color: inherit;
+  background-color: transparent;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Patrick Hand SC', 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif;
+  font-weight: 400;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: inherit;
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.75rem; }
+
+/* 2. Links (The Scribble Underline) */
+/* We use a CSS gradient to simulate a pen scribble */
+a {
+  color: #0b74d5;
+  text-decoration: none;
+  background-image: linear-gradient(5deg,transparent 65%,#0b74d5 80%,transparent 90%),linear-gradient(165deg,transparent 5%,#0b74d5 15%,transparent 25%),linear-gradient(165deg,transparent 45%,#0b74d5 55%,transparent 65%),linear-gradient(15deg,transparent 25%,#0b74d5 35%,transparent 50%);
+  background-position: 0 90%;
+  background-repeat: repeat-x;
+  background-size: 4px 3px;
+}
+a:hover { text-decoration: none; }
+
+/* 3. The "Paper" Border Logic */
+/* We use specific uneven border-radius values to mimic hand-drawing */
+
+blockquote {
+  border-left: 3px solid rgba(127,127,127,0.5);
+  margin: 1.5rem 0;
+  padding: 1rem;
+  font-style: italic;
+}
+
+/* 4. Cards & Sections (The "Sheet of Paper" look) */
+section, .card, pre, code {
+  border: 2px solid rgba(127,127,127, 0.4);
+  /* The Magic Paper Radius: */
+  border-bottom-left-radius: 15px 255px;
+  border-bottom-right-radius: 225px 15px;
+  border-top-left-radius: 255px 15px;
+  border-top-right-radius: 15px 225px;
+  
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  background: rgba(127, 127, 127, 0.04); /* Adaptive Paper Texture */
+  box-shadow: 15px 28px 25px -18px rgba(0,0,0,0.1); /* Subtle shadow */
+}
+
+/* 5. Tables (Notebook Style) */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+}
+
+th {
+  text-align: left;
+  border-bottom: 2px solid rgba(127, 127, 127, 0.4);
+  padding: 10px;
+  font-family: 'Patrick Hand SC', cursive;
+  font-size: 1.2rem;
+}
+
+td {
+  padding: 10px;
+  border-bottom: 1px dashed rgba(127, 127, 127, 0.3); /* Dashed lines like a notepad */
+}
+
+/* 6. Buttons */
+button, .paper-btn {
+  font-family: 'Patrick Hand SC', cursive;
+  font-size: 1.2rem;
+  background-color: transparent;
+  color: inherit;
+  border: 2px solid rgba(127, 127, 127, 0.6);
+  
+  /* Paper Radius */
+  border-bottom-left-radius: 15px 255px;
+  border-bottom-right-radius: 225px 15px;
+  border-top-left-radius: 255px 15px;
+  border-top-right-radius: 15px 225px;
+  
+  padding: 0.5rem 1.5rem;
+  cursor: pointer;
+  box-shadow: 3px 8px 10px -5px rgba(0,0,0,0.2);
+  transition: transform 0.1s;
+}
+
+button:hover {
+  transform: translate(0, 2px);
+  box-shadow: 1px 4px 6px -3px rgba(0,0,0,0.3);
+}
+
+img {
+  max-width: 100%;
+  border: 2px solid rgba(127, 127, 127, 0.4);
+  border-bottom-left-radius: 15px 255px;
+  border-bottom-right-radius: 225px 15px;
+  border-top-left-radius: 255px 15px;
+  border-top-right-radius: 15px 225px;
+}
+
+hr {
+  border: 0;
+  border-bottom: 2px dashed rgba(127, 127, 127, 0.3);
+  margin: 2rem 0;
+}
