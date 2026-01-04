@@ -1,5 +1,11 @@
 # The Living Syllabus User Guide
 
+| **Resource** | **Description** |
+| :--- | :--- |
+| **[Living Syllabus Blog](https://thing.rodeo/living-syllabus/)** | The main project documentation and philosophy. |
+| **[Word to Canvas Converter](https://ryanncode.github.io/living-syllabus/generate.html)** | Convert Word Docs (.docx) to clean, styled HTML code. |
+| **[Theme Builder](https://ryanncode.github.io/living-syllabus/theme-builder.html)** | Create custom CSS themes for your syllabus components. |
+
 ## Phase 1: The Setup (Installation & Workflow)
 
 > **Compatibility Note:** While this guide focuses on **Canvas**, this tool produces standard, flat HTML5 that works equally well in **Blackboard**, **Moodle**, **Brightspace (D2L)**, and any other LMS that accepts HTML input.
