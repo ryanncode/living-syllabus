@@ -23,6 +23,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Copy Themes to Site Source
+        run: cp -r themes docs/themes
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Build with Jekyll
