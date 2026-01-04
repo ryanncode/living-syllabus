@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classless Theme Builder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans p-8">
+
+    <div class="max-w-4xl mx-auto">
+        <div class="mb-8 border-b border-slate-200 pb-4 flex justify-between items-end">
+            <div>
+                <h1 class="text-3xl font-bold text-slate-900">Classless Theme Builder</h1>
+                <p class="text-slate-600 mt-2">Customize and "Scope" CSS themes for the LMS.</p>
+            </div>
+            <div class="text-sm space-x-4">
+                <a href="generate.html" class="text-slate-500 hover:text-blue-600 transition">Word Converter</a>
+                <span class="text-slate-300">|</span>
+                <a href="#" class="text-blue-600 font-bold">Theme Builder</a>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            
+            <div>
+                <label class="block text-sm font-semibold mb-2">1. Base Theme</label>
+                <select id="baseTheme" class="w-full p-3 border border-slate-300 rounded bg-white focus:ring-2 focus:ring-blue-500 outline-none">
+                    <option value="water">Water.css (Clean/Invisible)</option>
+                    <option value="simple">Simple.css (Academic/Blog)</option>
+                    <option value="pico">Pico.css (Modern/SaaS)</option>
+                </select>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-semibold mb-2">2. Brand Color (Primary)</label>
+                <div class="flex items-center gap-2">
+                    <input type="color" id="brandColor" value="#003366" class="h-[46px] w-16 p-1 border border-slate-300 rounded cursor-pointer">
+                    <input type="text" id="brandColorHex" value="#003366" class="w-full p-3 border border-slate-300 rounded bg-white focus:ring-2 focus:ring-blue-500 outline-none uppercase font-mono text-sm">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold mb-2">3. Scope Class</label>
+                <input type="text" id="scopeClass" value=".living-syllabus" class="w-full p-3 border border-slate-300 rounded bg-white focus:ring-2 focus:ring-blue-500 outline-none font-mono text-sm text-slate-600">
+            </div>
+        </div>
+
+        <div class="flex flex-col relative h-[600px]">
+            <div class="flex justify-between items-center mb-2">
+                <label class="block text-sm font-semibold">Generated CSS Output</label>
+                <span id="status" class="text-xs font-mono text-green-600 opacity-0 transition-opacity">✅ Built Successfully</span>
+            </div>
+
+            <textarea id="outputCSS" readonly class="flex-1 w-full p-6 border border-slate-300 rounded bg-slate-900 text-slate-50 font-mono text-xs leading-relaxed overflow-y-auto shadow-sm outline-none resize-none"></textarea>
+            
+            <div class="absolute top-12 right-6 flex flex-col items-end gap-2">
+                <button onclick="buildTheme()" class="bg-blue-600 text-white text-sm px-6 py-2 rounded shadow hover:bg-blue-700 transition font-bold">
+                    Run Builder
+                </button>
+                <button onclick="copyToClipboard()" class="bg-slate-700 text-white text-sm px-6 py-2 rounded shadow hover:bg-slate-600 transition font-bold">
+                    Copy CSS
+                </button>
+            </div>
+
+            <div class="mt-6 border-t border-slate-200 pt-6">
+                 <label class="block text-sm font-semibold mb-4">Live Preview (Scoped)</label>
+                 <div id="previewContainer" class="p-6 border border-slate-200 rounded bg-white min-h-[200px]">
+                    <div id="previewWrapper">
+                        <h1>Course Syllabus</h1>
+                        <p>This is a paragraph demonstrating the <a href="#">typography</a> and spacing.</p>
+                        <button>Primary Button</button>
+                        <blockquote>"Education is not the filling of a pail, but the lighting of a fire."</blockquote>
+                    </div>
+                 </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // URLs for raw CSS files (CDN)
+        const SOURCES = {
+            water: 'https://cdn.jsdelivr.net/npm/water.css@2/out/light.css',
+            simple: 'https://cdn.simplecss.org/simple.css',
+            pico: 'https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.classless.min.css'
+        };
+
+        // Sync Hex Text with Color Picker
+        const colorInput = document.getElementById('brandColor');
+        const hexInput = document.getElementById('brandColorHex');
+
+        colorInput.addEventListener('input', (e) => hexInput.value = e.target.value.toUpperCase());
+        hexInput.addEventListener('input', (e) => colorInput.value = e.target.value);
+
+        async function buildTheme() {
+            const themeKey = document.getElementById('baseTheme').value;
+            const primaryColor = document.getElementById('brandColor').value;
+            const scope = document.getElementById('scopeClass').value;
+            const statusLabel = document.getElementById('status');
+            const outputArea = document.getElementById('outputCSS');
+
+            outputArea.value = "Fetching and processing...";
+
+            try {
+                // 1. Fetch
+                const response = await fetch(SOURCES[themeKey]);
+                let css = await response.text();
+
+                // 2. Inject Brand Colors (Naive Regex Replacement)
+                // This targets common variable names used in these specific libraries
+                // Water.css uses --background-body, --text-main, etc.
+                // Simple.css uses --accent, --bg, etc.
+                // Pico uses --primary, etc.
+                
+                // Heuristic: Replace generic blue/accent hexes if variables aren't obvious
+                // But better: Append a root override block at the top which is safer.
+                
+                const rootOverride = `
+/* LIVING SYLLABUS: SCOPED THEME (${themeKey}) 
+   Generated: ${new Date().toLocaleDateString()}
+*/
+${scope} {
+    --primary: ${primaryColor};
+    --accent: ${primaryColor};
+    --link: ${primaryColor};
+    --button-bg: ${primaryColor};
+    --pico-primary: ${primaryColor};
+    --pico-primary-background: ${primaryColor};
+    --pico-primary-underline: ${primaryColor};
+}
+`;
+
+                // 3. Client-Side Scoping (The Prefix Logic)
+                // We use a regex to find all selectors before a '{'
+                // This is a "Lite" parser. It is not perfect but works for classless files.
+                
+                let scopedCSS = css.replace(/([^\r\n,{}]+)(,(?=[^}]*{)|\s*{)/g, (match, selector, separator) => {
+                    // Clean selector
+                    selector = selector.trim();
+                    
+                    // Don't prefix @media, @keyframes, or existing :root
+                    if (selector.startsWith('@') || selector.startsWith(':root') || selector === 'html') {
+                        return match; 
+                    }
+                    
+                    // Handle "body" specifically - map it to the scope
+                    if (selector === 'body') {
+                        return `${scope} ${separator}`;
+                    }
+
+                    // Standard prefixing
+                    return `${scope} ${selector} ${separator}`;
+                });
+
+                // Combine
+                const finalCSS = rootOverride + scopedCSS;
+
+                // 4. Output
+                outputArea.value = finalCSS;
+
+                // 5. Update Preview
+                updatePreview(finalCSS, scope);
+
+                // Animation
+                statusLabel.style.opacity = '1';
+                setTimeout(() => statusLabel.style.opacity = '0', 2000);
+
+            } catch (err) {
+                outputArea.value = "Error: " + err.message;
+            }
+        }
+
+        function updatePreview(cssContent, scopeClass) {
+            // Remove old style tag
+            const oldStyle = document.getElementById('preview-style');
+            if (oldStyle) oldStyle.remove();
+
+            // Add new style tag
+            const style = document.createElement('style');
+            style.id = 'preview-style';
+            style.innerHTML = cssContent;
+            document.head.appendChild(style);
+
+            // Apply scope class to wrapper
+            const wrapper = document.getElementById('previewWrapper');
+            // Clean class (remove dot)
+            const cleanClass = scopeClass.replace('.', '');
+            wrapper.className = cleanClass + " p-4 border border-dashed border-slate-300";
+        }
+
+        function copyToClipboard() {
+            const copyText = document.getElementById("outputCSS");
+            copyText.select();
+            navigator.clipboard.writeText(copyText.value).then(() => {
+                alert("CSS Copied!");
+            });
+        }
+        
+        // Run once on load
+        window.onload = buildTheme;
+
+    </script>
+</body>
+</html>
