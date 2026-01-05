@@ -201,32 +201,44 @@
         
         <div class="gh-card">
             <div class="grid-2">
-                <div>
-                    <label for="themeSelector">1. Select Style</label>
-                    <select id="themeSelector">
-                        <option value="simple.css">Simple (Academic/Blog)</option>
-                        <option value="grey.css">Grey (Classless Academic)</option>
-                        <option value="water.css">Water (Clean/Invisible)</option>
-                        <option value="pico-green.css">Pico Green (Modern/SaaS)</option>
-                        <option value="tufte.css">Tufte (Edward Tufte Style)</option>
-                        <option value="latex.css">LaTeX (Scientific Paper)</option>
-                        <option value="sakura.css">Sakura (Minimalist)</option>
-                        <option value="paper.css">Paper (Notebook Style)</option>
-                        <option value="tacit.css">Tacit (No-Class)</option>
-                    </select>
-                    <p class="subtext">Choose a preset theme...</p>
+                <div style="display: flex; flex-direction: column; gap: 15px;">
+                    <div>
+                        <label for="themeSelector">1. Select Style</label>
+                        <select id="themeSelector">
+                            <option value="simple.css">Simple (Academic/Blog)</option>
+                            <option value="grey.css">Grey (Classless Academic)</option>
+                            <option value="water.css">Water (Clean/Invisible)</option>
+                            <option value="pico-green.css">Pico Green (Modern/SaaS)</option>
+                            <option value="tufte.css">Tufte (Edward Tufte Style)</option>
+                            <option value="latex.css">LaTeX (Scientific Paper)</option>
+                            <option value="sakura.css">Sakura (Minimalist)</option>
+                            <option value="paper.css">Paper (Notebook Style)</option>
+                            <option value="tacit.css">Tacit (No-Class)</option>
+                        </select>
+                    </div>
                     
-                    <div style="margin-top: 15px; border-top: 1px dashed #dce1e6; padding-top: 10px;">
-                        <label for="customThemeInput" style="font-size: 0.75rem;">Or Upload Custom CSS</label>
-                        <input type="file" id="customThemeInput" accept=".css" />
-                        <p class="subtext">Upload your own .css file to override the selection above.</p>
+                    <div style="position: relative;">
+                        <div style="display: flex; align-items: center; justify-content: center; width: 100%;">
+                            <label for="customThemeInput" style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 45px; border: 1px dashed #dce1e6; border-radius: 4px; cursor: pointer; background-color: #f8fafc; transition: all 0.2s;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">OR Upload Custom CSS</span>
+                                </div>
+                                <input type="file" id="customThemeInput" accept=".css" style="display: none;" />
+                            </label>
+                        </div>
+                        <div id="customFileDisplay" style="display: none; align-items: center; justify-content: center; gap: 12px; margin-top: 8px;">
+                            <p id="customFileLabel" class="subtext" style="font-size: 0.9rem; font-weight: 500; text-align: center; margin: 0; color: var(--text-main);"></p>
+                            <button id="clearCustomTheme" style="background: none; border: none; color: #ef4444; cursor: pointer; font-size: 1.4rem; padding: 0; line-height: 1; display: flex; align-items: center;" title="Remove Custom Theme">&times;</button>
+                        </div>
                     </div>
                 </div>
 
                 <div>
                     <label for="uploadInput">2. Upload Content</label>
-                    <input type="file" id="uploadInput" accept=".docx, .md, .markdown" />
-                    <p class="subtext">Supports Microsoft Word (.docx) or Markdown (.md).</p>
+                    <div style="height: 100%; display: flex; flex-direction: column;">
+                        <input type="file" id="uploadInput" accept=".docx, .md, .markdown" style="height: 100px; padding-top: 35px;" />
+                        <p class="subtext">Supports Microsoft Word (.docx) or Markdown (.md).</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -278,12 +290,16 @@
         // Custom Theme Listener
         document.getElementById('customThemeInput').addEventListener('change', function(event) {
             const file = event.target.files[0];
+            const displayDiv = document.getElementById('customFileDisplay');
+            const label = document.getElementById('customFileLabel');
+            
             if (!file) {
-                customCssContent = null;
-                customCssFilename = null;
-                if(lastRawHTML) applyTheme(lastRawHTML);
+                // Handled by clear button logic mainly, but safety here
                 return;
             }
+
+            label.textContent = file.name;
+            displayDiv.style.display = 'flex';
 
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -293,6 +309,21 @@
                 if(lastRawHTML) applyTheme(lastRawHTML);
             };
             reader.readAsText(file);
+        });
+
+        document.getElementById('clearCustomTheme').addEventListener('click', function() {
+            // Clear file input
+            document.getElementById('customThemeInput').value = "";
+            
+            // Clear state
+            customCssContent = null;
+            customCssFilename = null;
+            
+            // Hide display
+            document.getElementById('customFileDisplay').style.display = 'none';
+            
+            // Re-apply default/selected theme
+            if(lastRawHTML) applyTheme(lastRawHTML);
         });
 
         // Listener
