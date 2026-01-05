@@ -1,267 +1,384 @@
----
-layout: default
-title: Generate
----
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<script src="https://cdn.tailwindcss.com"></script>
-
-<style>
-    /* Override grey.css body constraint so the tool can use full width */
-    body {
-        max-width: none !important;
-        padding: 0 !important;
-    }
-
-    /* Tool wrapper to break out of gh-canvas grid and reset styles */
-    .tool-wrapper {
-        grid-column: full-start / full-end;
-        background-color: #f8fafc; /* bg-slate-50 */
-        color: #1e293b; /* text-slate-800 */
-        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        padding: 2rem;
-    }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Living Syllabus | Generator</title>
     
-    /* Reset gh-content defaults that conflict with Tailwind */
-    .tool-wrapper h1, 
-    .tool-wrapper h2, 
-    .tool-wrapper h3,
-    .tool-wrapper p {
-        margin-top: 0;
-        margin-bottom: 0;
-        letter-spacing: normal;
-        line-height: inherit;
-    }
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     
-    .tool-wrapper a {
-        text-decoration: none;
-        color: inherit;
-    }
-    .tool-wrapper a:hover {
-        text-decoration: none;
-    }
-</style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 
-<div class="tool-wrapper full-width">
-    <div class="max-w-4xl mx-auto">
-        <header id="gh-navigation" class="gh-navigation is-left-logo has-accent-color gh-outer is-dropdown-loaded" style="margin-bottom: 2rem;">
-            <div class="gh-navigation-inner gh-inner" style="display: flex; justify-content: space-between; align-items: center;">
-                <div class="gh-navigation-brand">
-                    <a class="gh-navigation-logo is-title" href="index.html" style="font-weight: 800; font-size: 1.5rem; color: #15171a; text-decoration: none;">
-                        Living Syllabus
-                    </a>
-                </div>
-                <nav class="gh-navigation-menu">
-                    <ul class="nav" style="display: flex; gap: 20px; list-style: none; margin: 0; padding: 0;">
-                        <li class="nav-home"><a href="index.html" style="color: #15171a; opacity: 0.8; font-weight: 500;">Home</a></li>
-                        <li class="nav-converter nav-current"><a href="generate.html" style="color: #15171a; font-weight: 700;">Generate</a></li>
-                        <li class="nav-builder"><a href="theme-builder.html" style="color: #15171a; opacity: 0.8; font-weight: 500;">Theme Builder</a></li>
-                    </ul>
-                </nav>
-            </div>
+    <style>
+        /* --- THINGHOOD / GREY.CSS AESTHETIC --- */
+        
+        :root {
+            --font-stack: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --background-color: #e4e9ee; /* Thinghood BG */
+            --card-bg: #ffffff;
+            --text-main: #15171a;
+            --text-muted: #738a94;
+            --accent-color: #4a5568; /* Ghost Accent */
+            --border-color: rgba(0,0,0,0.08);
+            --radius: 5px;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-main);
+            font-family: var(--font-stack);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Layout Container (Matches Thinghood 'gh-inner') */
+        .gh-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 4vw;
+        }
+
+        /* --- NAVIGATION (Matches Thinghood Header) --- */
+        .gh-head {
+            padding: 30px 0;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .gh-logo {
+            font-weight: 800;
+            font-size: 1.8rem;
+            color: var(--text-main);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+
+        .gh-menu {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .gh-menu a {
+            color: var(--text-main);
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 0.95rem;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+        .gh-menu a:hover { opacity: 1; }
+        .gh-menu a.active { opacity: 1; text-decoration: underline; text-underline-offset: 4px; }
+
+        /* --- CARDS (Matches Thinghood Posts) --- */
+        .gh-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
+            padding: 40px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+        }
+
+        .gh-card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.01em;
+            color: var(--text-main);
+        }
+
+        /* --- FORMS & CONTROLS --- */
+        label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        select, input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #dce1e6;
+            border-radius: 4px;
+            background-color: #f8fafc;
+            font-family: var(--font-stack);
+            font-size: 1rem;
+            color: var(--text-main);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        select:focus, input[type="file"]:focus {
+            border-color: var(--accent-color);
+            background-color: #fff;
+        }
+
+        /* Custom File Input Styling Hook */
+        input[type="file"]::file-selector-button {
+            margin-right: 15px;
+            padding: 8px 16px;
+            border: none;
+            background-color: #eef2f6;
+            color: var(--text-main);
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: var(--font-stack);
+        }
+
+        /* --- ACTION BUTTON (Matches Thinghood Footer Subscribe) --- */
+        .btn-action {
+            background-color: #15171a;
+            color: #fff;
+            font-weight: 700;
+            padding: 12px 24px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-action:hover { opacity: 0.9; }
+
+        /* --- PREVIEW AREA --- */
+        #preview {
+            min-height: 500px;
+            background: #fff; /* Ensure white canvas for preview */
+            border: 1px solid #e1e1e1;
+            padding: 40px;
+            border-radius: 4px;
+            overflow-y: auto;
+        }
+        
+        /* Utility */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+        
+        .subtext {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="gh-inner">
+        <header class="gh-head">
+            <a href="index.html" class="gh-logo">Living Syllabus</a>
+            <nav>
+                <ul class="gh-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="generate.html" class="active">Generate</a></li>
+                    <li><a href="theme-builder.html">Theme Builder</a></li>
+                </ul>
+            </nav>
         </header>
+    </div>
 
-        <div class="mb-8 border-b border-slate-200 pb-4">
-            <p class="text-slate-600 mt-2">Upload a .docx or .md file. Pick a Theme. Get Clean Code.</p>
-        </div>
+    <div class="gh-inner">
+        
+        <div class="gh-card">
+            <div class="grid-2">
+                <div>
+                    <label for="themeSelector">1. Select Style</label>
+                    <select id="themeSelector">
+                        <option value="simple.css">Simple (Academic/Blog)</option>
+                        <option value="grey.css">Grey (Classless Academic)</option>
+                        <option value="water.css">Water (Clean/Invisible)</option>
+                        <option value="pico-green.css">Pico Green (Modern/SaaS)</option>
+                        <option value="tufte.css">Tufte (Edward Tufte Style)</option>
+                        <option value="latex.css">LaTeX (Scientific Paper)</option>
+                        <option value="sakura.css">Sakura (Minimalist)</option>
+                        <option value="paper.css">Paper (Notebook Style)</option>
+                        <option value="tacit.css">Tacit (No-Class)</option>
+                    </select>
+                    <p class="subtext">Choose the CSS theme that will be embedded in your code.</p>
+                </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <div>
-                <label class="block text-sm font-semibold mb-2">1. Select Theme</label>
-                <select id="themeSelector" class="w-full p-3 border border-slate-300 rounded bg-white focus:ring-2 focus:ring-blue-500 outline-none">
-                    <option value="simple.css">Simple (Academic/Blog)</option>
-                    <option value="water.css">Water (Clean/Invisible)</option>
-                    <option value="pico-green.css">Pico Green (Modern/SaaS)</option>
-                    <option value="tufte.css">Tufte (Edward Tufte Style)</option>
-                    <option value="latex.css">LaTeX (Scientific Paper)</option>
-                    <option value="sakura.css">Sakura (Minimalist)</option>
-                    <option value="paper.css">Paper (Notebook Style)</option>
-                    <option value="tacit.css">Tacit (No-Class)</option>
-                    <option value="bahunya.css">Bahunya (Responsive)</option>
-                    <option value="marx.css">Marx (Stylish Reset)</option>
-                    <option value="mcss.css">mCSS (Micro CSS)</option>
-                </select>
-            </div>
-            
-            <div>
-                <label class="block text-sm font-semibold mb-2">2. Upload File (.docx or .md)</label>
-                <input type="file" id="uploadInput" accept=".docx, .md, .markdown" class="block w-full text-sm text-slate-500
-                    file:mr-4 file:py-3 file:px-4
-                    file:rounded-full file:border-0
-                    file:text-sm file:font-semibold
-                    file:bg-blue-50 file:text-blue-700
-                    hover:file:bg-blue-100 cursor-pointer" />
+                <div>
+                    <label for="uploadInput">2. Upload Content</label>
+                    <input type="file" id="uploadInput" accept=".docx, .md, .markdown" />
+                    <p class="subtext">Supports Microsoft Word (.docx) or Markdown (.md).</p>
+                </div>
             </div>
         </div>
 
-        <div class="flex flex-col relative h-[600px]">
-            <label class="block text-sm font-semibold mb-2">Preview (Appx)</label>
-            <div id="preview" class="flex-1 w-full p-8 border border-slate-300 rounded bg-white overflow-y-auto shadow-sm">
-                <div class="text-center mt-20 text-gray-400">
-                    <p class="text-xl">Waiting for file...</p>
-                    <p class="text-sm mt-2">Select a file to see the result here.</p>
+        <div class="gh-card">
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px;">
+                <div>
+                    <h2 class="gh-card-title" style="margin-bottom: 5px;">Preview</h2>
+                    <p class="subtext">See how your content looks before copying.</p>
+                </div>
+                <button onclick="copyToClipboard()" class="btn-action">
+                    Copy HTML Code
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                </button>
+            </div>
+
+            <div id="preview">
+                <div style="text-align: center; margin-top: 80px; color: #a0aec0;">
+                    <p style="font-size: 1.2rem; font-weight: 500;">Waiting for content...</p>
+                    <p>Select a file above to render it here.</p>
                 </div>
             </div>
             
-            <div class="absolute top-10 right-8 flex flex-col items-end gap-2">
-                <button onclick="copyToClipboard()" class="bg-slate-900 text-white text-sm px-6 py-2 rounded shadow hover:bg-slate-700 transition font-bold">
-                    Copy HTML Code
-                </button>
-                <p class="text-xs text-slate-600 bg-yellow-50 border border-yellow-200 p-2 rounded shadow-sm">
-                    ⚠️ Paste inside the <strong>HTML Editor (</>)</strong> in Canvas
-                </p>
-            </div>
+            <p class="subtext" style="margin-top: 20px; text-align: right;">
+                ⚠️ Paste the copied code into the <strong>HTML Editor (&lt;/&gt;)</strong> in Canvas.
+            </p>
         </div>
+        
     </div>
-</div>
 
-<script>
-    // A. The Themes: CSS Inliner Rules
-    // Instead of hardcoding rules, we will fetch the actual CSS file content
-    
-    // Helper to map filenames to local paths
-    // Since the user downloads the whole repo, we can fetch relative to the docs folder.
-    // The structure is:
-    // root/
-    //   themes/ (where the css files are)
-    //   docs/
-    //     generate.html
-    // So the path to themes from generate.html is "../themes/"
-    function getThemeUrl(filename) {
-        return "./themes/" + filename;
-    }
+    <div class="gh-inner" style="padding-bottom: 60px; text-align: center; color: var(--text-muted); font-size: 0.85rem;">
+        Thinghood Limited &copy; 2026. Powered by standard web technologies.
+    </div>
 
-    let generatedHTML = "";
-    let lastRawHTML = ""; 
-
-    // B. The Listener
-    document.getElementById('uploadInput').addEventListener('change', function(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        const extension = file.name.split('.').pop().toLowerCase();
-
-        if (extension === 'docx') {
-            reader.onload = function(loadEvent) {
-                const arrayBuffer = loadEvent.target.result;
-                mammoth.convertToHtml({arrayBuffer: arrayBuffer})
-                    .then(result => {
-                        if(result.messages.length > 0) console.log("Mammoth Warnings:", result.messages);
-                        lastRawHTML = result.value; 
-                        applyTheme(lastRawHTML);
-                    })
-                    .catch(handleError);
-            };
-            reader.readAsArrayBuffer(file);
-        } else if (extension === 'md' || extension === 'markdown') {
-            reader.onload = function(loadEvent) {
-                const text = loadEvent.target.result;
-                lastRawHTML = marked.parse(text);
-                applyTheme(lastRawHTML);
-            };
-            reader.readAsText(file);
-        } else {
-            alert("Unsupported file type. Please upload .docx or .md");
+    <script>
+        // --- LOGIC: SAME AS ORIGINAL, JUST ADAPTED TO DOM ---
+        
+        function getThemeUrl(filename) {
+            return "./themes/" + filename;
         }
-    });
 
-    async function applyTheme(htmlContent) {
-        const themeFilename = document.getElementById('themeSelector').value;
-        const statusLabel = document.getElementById('preview'); 
-        
-        // Show loading state in preview
-        statusLabel.innerHTML = `<div class="text-center mt-20 text-gray-400"><p class="text-xl">Fetching ${themeFilename}...</p></div>`;
+        let generatedHTML = "";
+        let lastRawHTML = ""; 
 
-        const cssUrl = getThemeUrl(themeFilename);
-        let cssContent = "";
-        
-        try {
-            if (themeFilename) {
-                const response = await fetch(cssUrl);
-                if (!response.ok) throw new Error("Failed to load theme");
-                cssContent = await response.text();
+        // Listener
+        document.getElementById('uploadInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            const extension = file.name.split('.').pop().toLowerCase();
+
+            if (extension === 'docx') {
+                reader.onload = function(loadEvent) {
+                    const arrayBuffer = loadEvent.target.result;
+                    mammoth.convertToHtml({arrayBuffer: arrayBuffer})
+                        .then(result => {
+                            if(result.messages.length > 0) console.log("Mammoth Warnings:", result.messages);
+                            lastRawHTML = result.value; 
+                            applyTheme(lastRawHTML);
+                        })
+                        .catch(handleError);
+                };
+                reader.readAsArrayBuffer(file);
+            } else if (extension === 'md' || extension === 'markdown') {
+                reader.onload = function(loadEvent) {
+                    const text = loadEvent.target.result;
+                    lastRawHTML = marked.parse(text);
+                    applyTheme(lastRawHTML);
+                };
+                reader.readAsText(file);
             } else {
-                 console.warn("No theme selected, defaulting to no style.");
+                alert("Unsupported file type. Please upload .docx or .md");
             }
-        } catch (e) {
-            console.error(e);
-            // Non-blocking error: allow generation to proceed without theme
-            cssContent = "/* Theme file not found or load failed. Content generated without specific styling. */";
-        }
+        });
 
-        // Create wrapper
-        const wrapper = document.createElement('div');
-        wrapper.innerHTML = htmlContent;
+        async function applyTheme(htmlContent) {
+            const themeFilename = document.getElementById('themeSelector').value;
+            const previewEl = document.getElementById('preview');
+            
+            // Loading state
+            previewEl.innerHTML = `<div style="text-align: center; margin-top: 80px; color: #a0aec0;"><p>Fetching ${themeFilename}...</p></div>`;
 
-        // Apply Container Style (Generic safe default for all classless themes)
-        const container = document.createElement('div');
-        container.setAttribute('style', "max-width: 800px; margin: 0 auto;");
-        
-        // SCOPED CSS INJECTION
-        // We inject the fetched CSS into a style block.
-        // To prevent it from affecting the rest of the page (if pasted into a messy LMS), 
-        // we ideally scope it. However, most classless themes target bare tags (h1, p).
-        // The best strategy for "Clean Code" is to provide the style block + the content.
-        
-        const scopedStyle = `
+            const cssUrl = getThemeUrl(themeFilename);
+            let cssContent = "";
+            
+            try {
+                if (themeFilename) {
+                    const response = await fetch(cssUrl);
+                    if (!response.ok) throw new Error("Failed to load theme");
+                    cssContent = await response.text();
+                }
+            } catch (e) {
+                console.error(e);
+                cssContent = "/* Theme file not found. Content generated without specific styling. */";
+            }
+
+            // Wrapper construction
+            const wrapper = document.createElement('div');
+            wrapper.innerHTML = htmlContent;
+
+            const container = document.createElement('div');
+            container.setAttribute('style', "max-width: 800px; margin: 0 auto;");
+            
+            // Scoped CSS
+            const scopedStyle = `
 <style>
 /* Theme: ${themeFilename} */
 .canvas-component-wrapper {
     font-family: system-ui, -apple-system, sans-serif;
     line-height: 1.5;
+    color: #333; /* Default safety color */
 }
-/* Note: These styles are global within this scope. 
-   When pasting to Canvas, they may affect other parts of the page 
-   if not carefully managed, but this is the nature of Classless CSS. */
 ${cssContent}
 </style>
 `;
-        
-        // Wrap the content
-        container.className = "canvas-component-wrapper";
-        container.innerHTML = wrapper.innerHTML;
-        
-        // PREVIEW RENDERING (Shadow DOM to prevent bleeding)
-        const previewEl = document.getElementById('preview');
-        // Reset preview
-        previewEl.innerHTML = "";
-        
-        // We use a Shadow Root to truly isolate the preview styles from the tool's UI
-        // This ensures the "water.css" or "simple.css" doesn't wreck our sidebar or header.
-        if (!previewEl.shadowRoot) {
-            previewEl.attachShadow({mode: 'open'});
+            container.className = "canvas-component-wrapper";
+            container.innerHTML = wrapper.innerHTML;
+            
+            // Shadow DOM for isolation in Preview
+            previewEl.innerHTML = "";
+            if (!previewEl.shadowRoot) {
+                previewEl.attachShadow({mode: 'open'});
+            }
+            previewEl.shadowRoot.innerHTML = `
+                ${scopedStyle}
+                <div class="canvas-component-wrapper">
+                    ${wrapper.innerHTML}
+                </div>
+            `;
+            
+            // Final Output Generation
+            generatedHTML = `\n${scopedStyle}\n<div class="canvas-component-wrapper">\n${wrapper.innerHTML}\n</div>`;
         }
-        
-        // Inject into Shadow DOM
-        previewEl.shadowRoot.innerHTML = `
-            ${scopedStyle}
-            <div class="canvas-component-wrapper">
-                ${wrapper.innerHTML}
-            </div>
-        `;
-        
-        // OUTPUT GENERATION
-        // For the user to copy, we provide the HTML with the embedded style block.
-        generatedHTML = `<!-- Theme: ${themeFilename} -->\n${scopedStyle}\n<div class="canvas-component-wrapper">\n${wrapper.innerHTML}\n</div>`;
-    }
 
-    document.getElementById('themeSelector').addEventListener('change', function() {
-        if(lastRawHTML) applyTheme(lastRawHTML);
-    });
-
-    function handleError(err) {
-        console.log(err);
-        alert("Error reading file. Make sure it is a valid .docx");
-    }
-
-    function copyToClipboard() {
-        if (!generatedHTML) {
-            alert("Upload a file first!");
-            return;
-        }
-        navigator.clipboard.writeText(generatedHTML).then(() => {
-            alert("HTML Code Copied to Clipboard!");
+        document.getElementById('themeSelector').addEventListener('change', function() {
+            if(lastRawHTML) applyTheme(lastRawHTML);
         });
-    }
-</script>
+
+        function handleError(err) {
+            console.log(err);
+            alert("Error reading file. Make sure it is a valid .docx");
+        }
+
+        function copyToClipboard() {
+            if (!generatedHTML) {
+                alert("Upload a file first!");
+                return;
+            }
+            navigator.clipboard.writeText(generatedHTML).then(() => {
+                const btn = document.querySelector('.btn-action');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = "Copied! ✓";
+                setTimeout(() => { btn.innerHTML = originalText; }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

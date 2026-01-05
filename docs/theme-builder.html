@@ -1,166 +1,346 @@
----
-layout: default
-title: Theme Builder
----
-<script src="https://cdn.tailwindcss.com"></script>
-
-<style>
-    /* Override grey.css body constraint so the tool can use full width */
-    body {
-        max-width: none !important;
-        padding: 0 !important;
-    }
-
-    /* Tool wrapper to break out of gh-canvas grid and reset styles */
-    .tool-wrapper {
-        grid-column: full-start / full-end;
-        background-color: #f8fafc; /* bg-slate-50 */
-        color: #1e293b; /* text-slate-800 */
-        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        padding: 2rem;
-    }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Living Syllabus | Theme Builder</title>
     
-    /* Reset gh-content defaults that conflict with Tailwind */
-    .tool-wrapper h1, 
-    .tool-wrapper h2, 
-    .tool-wrapper h3,
-    .tool-wrapper p {
-        margin-top: 0;
-        margin-bottom: 0;
-        letter-spacing: normal;
-        line-height: inherit;
-    }
+    <script src="https://cdn.tailwindcss.com"></script>
     
-    .tool-wrapper a {
-        text-decoration: none;
-        color: inherit;
-    }
-    .tool-wrapper a:hover {
-        text-decoration: none;
-    }
-</style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 
-<div class="tool-wrapper full-width">
-    <div class="max-w-4xl mx-auto">
-        <header id="gh-navigation" class="gh-navigation is-left-logo has-accent-color gh-outer is-dropdown-loaded" style="margin-bottom: 2rem;">
-            <div class="gh-navigation-inner gh-inner" style="display: flex; justify-content: space-between; align-items: center;">
-                <div class="gh-navigation-brand">
-                    <a class="gh-navigation-logo is-title" href="index.html" style="font-weight: 800; font-size: 1.5rem; color: #15171a; text-decoration: none;">
-                        Thinghood Limited
-                    </a>
-                </div>
-                <nav class="gh-navigation-menu">
-                    <ul class="nav" style="display: flex; gap: 20px; list-style: none; margin: 0; padding: 0;">
-                        <li class="nav-home"><a href="index.html" style="color: #15171a; opacity: 0.8; font-weight: 500;">Home</a></li>
-                        <li class="nav-converter"><a href="generate.html" style="color: #15171a; opacity: 0.8; font-weight: 500;">Generate</a></li>
-                        <li class="nav-builder nav-current"><a href="theme-builder.html" style="color: #15171a; font-weight: 700;">Theme Builder</a></li>
-                    </ul>
-                </nav>
-            </div>
+    <style>
+        /* --- THINGHOOD / GREY.CSS AESTHETIC --- */
+        
+        :root {
+            --font-stack: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            --background-color: #e4e9ee; /* Thinghood BG */
+            --card-bg: #ffffff;
+            --text-main: #15171a;
+            --text-muted: #738a94;
+            --accent-color: #4a5568; 
+            --border-color: rgba(0,0,0,0.08);
+            --radius: 5px;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-main);
+            font-family: var(--font-stack);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Layout Container */
+        .gh-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 4vw;
+        }
+
+        /* --- NAVIGATION --- */
+        .gh-head {
+            padding: 30px 0;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .gh-logo {
+            font-weight: 800;
+            font-size: 1.8rem;
+            color: var(--text-main);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+
+        .gh-menu {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .gh-menu a {
+            color: var(--text-main);
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 0.95rem;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+        .gh-menu a:hover { opacity: 1; }
+        .gh-menu a.active { opacity: 1; text-decoration: underline; text-underline-offset: 4px; }
+
+        /* --- CARDS --- */
+        .gh-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
+            padding: 40px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+        }
+
+        .gh-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .gh-card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            color: var(--text-main);
+            margin: 0;
+        }
+
+        /* --- FORMS & CONTROLS --- */
+        label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        select, input[type="text"], input[type="color"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #dce1e6;
+            border-radius: 4px;
+            background-color: #f8fafc;
+            font-family: var(--font-stack);
+            font-size: 0.95rem;
+            color: var(--text-main);
+            outline: none;
+            transition: border-color 0.2s, background-color 0.2s;
+            height: 44px; /* Uniform height */
+        }
+
+        select:focus, input:focus {
+            border-color: var(--accent-color);
+            background-color: #fff;
+        }
+
+        /* Custom Color Picker Wrapper */
+        .color-group {
+            display: flex;
+            gap: 10px;
+        }
+        .color-group input[type="color"] {
+            width: 60px;
+            padding: 2px;
+            cursor: pointer;
+        }
+        .color-group input[type="text"] {
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+        }
+
+        /* --- BUTTONS --- */
+        .btn-black {
+            background-color: #15171a;
+            color: #fff;
+            font-weight: 700;
+            padding: 12px 24px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            font-size: 0.9rem;
+        }
+        .btn-black:hover { opacity: 0.9; }
+
+        .btn-ghost {
+            background-color: transparent;
+            color: var(--text-muted);
+            font-weight: 600;
+            padding: 8px 16px;
+            border: 1px solid #dce1e6;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+        }
+        .btn-ghost:hover { border-color: var(--text-main); color: var(--text-main); }
+
+        /* --- CODE EDITOR & PREVIEW --- */
+        .code-editor {
+            width: 100%;
+            height: 300px;
+            background-color: #1e293b; /* Slate 800 */
+            color: #f1f5f9;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            padding: 20px;
+            border-radius: 4px;
+            border: none;
+            resize: none;
+            outline: none;
+            line-height: 1.5;
+        }
+
+        .preview-box {
+            background: #fff;
+            border: 1px dashed #cbd5e1;
+            padding: 40px;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+
+        /* Utility */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        @media (max-width: 768px) { .grid-3 { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <div class="gh-inner">
+        <header class="gh-head">
+            <a href="index.html" class="gh-logo">Living Syllabus</a>
+            <nav>
+                <ul class="gh-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="generate.html">Generate</a></li>
+                    <li><a href="theme-builder.html" class="active">Theme Builder</a></li>
+                </ul>
+            </nav>
         </header>
+    </div>
 
-        <div class="mb-8 border-b border-slate-200 pb-4 flex justify-between items-end">
-            <div>
-                <p class="text-slate-600 mt-2">Customize and "Scope" CSS themes for the LMS.</p>
+    <div class="gh-inner">
+        
+        <div class="gh-card">
+            <div class="gh-card-header">
+                <h2 class="gh-card-title">Configuration</h2>
+                <button onclick="buildTheme()" class="btn-black">Run Builder</button>
+            </div>
+            
+            <div class="grid-3">
+                <div>
+                    <label for="baseTheme">1. Base Theme</label>
+                    <select id="baseTheme">
+                        <option value="water">Water.css (Clean/Invisible)</option>
+                        <option value="simple">Simple.css (Academic/Blog)</option>
+                        <option value="pico">Pico.css (Modern/SaaS)</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="brandColor">2. Brand Color</label>
+                    <div class="color-group">
+                        <input type="color" id="brandColor" value="#003366">
+                        <input type="text" id="brandColorHex" value="#003366">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="scopeClass">3. CSS Scope Class</label>
+                    <input type="text" id="scopeClass" value=".living-syllabus" placeholder=".my-class">
+                </div>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            
-            <div>
-                <label class="block text-sm font-semibold mb-2">1. Base Theme</label>
-                <select id="baseTheme" class="w-full p-3 border border-slate-300 rounded bg-white focus:ring-2 focus:ring-blue-500 outline-none">
-                    <option value="water">Water.css (Clean/Invisible)</option>
-                    <option value="simple">Simple.css (Academic/Blog)</option>
-                    <option value="pico">Pico.css (Modern/SaaS)</option>
-                </select>
-            </div>
-            
-            <div>
-                <label class="block text-sm font-semibold mb-2">2. Brand Color (Primary)</label>
-                <div class="flex items-center gap-2">
-                    <input type="color" id="brandColor" value="#003366" class="h-[46px] w-16 p-1 border border-slate-300 rounded cursor-pointer">
-                    <input type="text" id="brandColorHex" value="#003366" class="w-full p-3 border border-slate-300 rounded bg-white focus:ring-2 focus:ring-blue-500 outline-none uppercase font-mono text-sm">
+        <div class="gh-card">
+            <div class="gh-card-header">
+                <h2 class="gh-card-title">Output & Preview</h2>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <span id="status" style="font-size: 0.8rem; color: #10b981; opacity: 0; transition: opacity 0.5s;">
+                        ✓ Built Successfully
+                    </span>
+                    <button onclick="copyToClipboard()" class="btn-ghost">Copy CSS</button>
                 </div>
             </div>
 
-            <div>
-                <label class="block text-sm font-semibold mb-2">3. Scope Class</label>
-                <input type="text" id="scopeClass" value=".living-syllabus" class="w-full p-3 border border-slate-300 rounded bg-white focus:ring-2 focus:ring-blue-500 outline-none font-mono text-sm text-slate-600">
-            </div>
-        </div>
+            <label>Generated CSS</label>
+            <textarea id="outputCSS" readonly class="code-editor" spellcheck="false">/* Click 'Run Builder' to generate scoped CSS */</textarea>
 
-        <div class="flex flex-col relative h-[600px]">
-            <div class="flex justify-between items-center mb-2">
-                <label class="block text-sm font-semibold">Generated CSS Output</label>
-                <span id="status" class="text-xs font-mono text-green-600 opacity-0 transition-opacity">✅ Built Successfully</span>
-            </div>
-
-            <textarea id="outputCSS" readonly class="flex-1 w-full p-6 border border-slate-300 rounded bg-slate-900 text-slate-50 font-mono text-xs leading-relaxed overflow-y-auto shadow-sm outline-none resize-none"></textarea>
-            
-            <div class="absolute top-12 right-6 flex flex-col items-end gap-2">
-                <button onclick="buildTheme()" class="bg-blue-600 text-white text-sm px-6 py-2 rounded shadow hover:bg-blue-700 transition font-bold">
-                    Run Builder
-                </button>
-                <button onclick="copyToClipboard()" class="bg-slate-700 text-white text-sm px-6 py-2 rounded shadow hover:bg-slate-600 transition font-bold">
-                    Copy CSS
-                </button>
-            </div>
-
-            <div class="mt-6 border-t border-slate-200 pt-6">
-                 <label class="block text-sm font-semibold mb-4">Live Preview (Scoped)</label>
-                 <div id="previewContainer" class="p-6 border border-slate-200 rounded bg-white min-h-[200px]">
+            <div style="margin-top: 40px;">
+                <label>Live Preview (Scoped)</label>
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 10px;">
+                    The styles below are applied <strong>only</strong> if the builder worked correctly.
+                </p>
+                
+                <div id="previewContainer" class="preview-box">
                     <div id="previewWrapper">
-                        <h1>Course Syllabus</h1>
-                        <p>This is a paragraph demonstrating the <a href="#">typography</a> and spacing.</p>
-                        <button>Primary Button</button>
-                        <blockquote>"Education is not the filling of a pail, but the lighting of a fire."</blockquote>
+                        <h1>Introduction to Philosophy</h1>
+                        <p>This course explores the fundamental questions of human existence. The syllabus demonstrates how <a href="#">inline links</a>, buttons, and typography will appear in your LMS.</p>
+                        
+                        <h3>Course Materials</h3>
+                        <ul>
+                            <li>Plato's <em>Republic</em></li>
+                            <li>Descartes' <em>Meditations</em></li>
+                            <li>Kant's <em>Critique of Pure Reason</em></li>
+                        </ul>
+
+                        <blockquote>
+                            "The unexamined life is not worth living." — Socrates
+                        </blockquote>
+
+                        <p>
+                            <button>Download Syllabus</button>
+                            <button style="background:transparent; border: 1px solid currentColor; color: inherit; opacity: 0.7;">View Schedule</button>
+                        </p>
                     </div>
-                 </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<script>
-    // URLs for raw CSS files (CDN)
-    const SOURCES = {
-        water: 'https://cdn.jsdelivr.net/npm/water.css@2/out/light.css',
-        simple: 'https://cdn.simplecss.org/simple.css',
-        pico: 'https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.classless.min.css'
-    };
+    <div class="gh-inner" style="padding-bottom: 60px; text-align: center; color: var(--text-muted); font-size: 0.85rem;">
+        Thinghood Limited &copy; 2026. Powered by standard web technologies.
+    </div>
 
-    // Sync Hex Text with Color Picker
-    const colorInput = document.getElementById('brandColor');
-    const hexInput = document.getElementById('brandColorHex');
+    <script>
+        // URLs for raw CSS files (CDN)
+        const SOURCES = {
+            water: 'https://cdn.jsdelivr.net/npm/water.css@2/out/light.css',
+            simple: 'https://cdn.simplecss.org/simple.css',
+            pico: 'https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.classless.min.css'
+        };
 
-    colorInput.addEventListener('input', (e) => hexInput.value = e.target.value.toUpperCase());
-    hexInput.addEventListener('input', (e) => colorInput.value = e.target.value);
+        // Sync Hex Text with Color Picker
+        const colorInput = document.getElementById('brandColor');
+        const hexInput = document.getElementById('brandColorHex');
 
-    async function buildTheme() {
-        const themeKey = document.getElementById('baseTheme').value;
-        const primaryColor = document.getElementById('brandColor').value;
-        const scope = document.getElementById('scopeClass').value;
-        const statusLabel = document.getElementById('status');
-        const outputArea = document.getElementById('outputCSS');
+        colorInput.addEventListener('input', (e) => hexInput.value = e.target.value.toUpperCase());
+        hexInput.addEventListener('input', (e) => colorInput.value = e.target.value);
 
-        outputArea.value = "Fetching and processing...";
+        async function buildTheme() {
+            const themeKey = document.getElementById('baseTheme').value;
+            const primaryColor = document.getElementById('brandColor').value;
+            const scope = document.getElementById('scopeClass').value;
+            const statusLabel = document.getElementById('status');
+            const outputArea = document.getElementById('outputCSS');
 
-        try {
-            // 1. Fetch
-            const response = await fetch(SOURCES[themeKey]);
-            let css = await response.text();
+            outputArea.value = "Fetching and processing...";
 
-            // 2. Inject Brand Colors (Naive Regex Replacement)
-            // This targets common variable names used in these specific libraries
-            // Water.css uses --background-body, --text-main, etc.
-            // Simple.css uses --accent, --bg, etc.
-            // Pico uses --primary, etc.
-            
-            // Heuristic: Replace generic blue/accent hexes if variables aren't obvious
-            // But better: Append a root override block at the top which is safer.
-            
-            const rootOverride = `
+            try {
+                // 1. Fetch
+                const response = await fetch(SOURCES[themeKey]);
+                let css = await response.text();
+
+                // 2. Inject Brand Colors (Root Override)
+                // We create a specific rule for the scope to override the library's defaults
+                const rootOverride = `
 /* LIVING SYLLABUS: SCOPED THEME (${themeKey}) 
    Generated: ${new Date().toLocaleDateString()}
 */
@@ -175,73 +355,81 @@ ${scope} {
 }
 `;
 
-            // 3. Client-Side Scoping (The Prefix Logic)
-            // We use a regex to find all selectors before a '{'
-            // This is a "Lite" parser. It is not perfect but works for classless files.
-            
-            let scopedCSS = css.replace(/([^\r\n,{}]+)(,(?=[^}]*{)|\s*{)/g, (match, selector, separator) => {
-                // Clean selector
-                selector = selector.trim();
-                
-                // Don't prefix @media, @keyframes, or existing :root
-                if (selector.startsWith('@') || selector.startsWith(':root') || selector === 'html') {
-                    return match; 
-                }
-                
-                // Handle "body" specifically - map it to the scope
-                if (selector === 'body') {
-                    return `${scope} ${separator}`;
-                }
+                // 3. Client-Side Scoping (Regex Prefixing)
+                // This captures selectors and prepends the scope class
+                let scopedCSS = css.replace(/([^\r\n,{}]+)(,(?=[^}]*{)|\s*{)/g, (match, selector, separator) => {
+                    selector = selector.trim();
+                    
+                    // Ignore @media, keyframes, html, :root
+                    if (selector.startsWith('@') || selector.startsWith(':root') || selector === 'html') {
+                        return match; 
+                    }
+                    
+                    // Map generic 'body' to the scope container
+                    if (selector === 'body') {
+                        return `${scope} ${separator}`;
+                    }
 
-                // Standard prefixing
-                return `${scope} ${selector} ${separator}`;
-            });
+                    return `${scope} ${selector} ${separator}`;
+                });
 
-            // Combine
-            const finalCSS = rootOverride + scopedCSS;
+                // Combine
+                const finalCSS = rootOverride + scopedCSS;
 
-            // 4. Output
-            outputArea.value = finalCSS;
+                // 4. Output
+                outputArea.value = finalCSS;
 
-            // 5. Update Preview
-            updatePreview(finalCSS, scope);
+                // 5. Update Preview
+                updatePreview(finalCSS, scope);
 
-            // Animation
-            statusLabel.style.opacity = '1';
-            setTimeout(() => statusLabel.style.opacity = '0', 2000);
+                // Animation
+                statusLabel.style.opacity = '1';
+                setTimeout(() => statusLabel.style.opacity = '0', 2500);
 
-        } catch (err) {
-            outputArea.value = "Error: " + err.message;
+            } catch (err) {
+                outputArea.value = "Error: " + err.message;
+            }
         }
-    }
 
-    function updatePreview(cssContent, scopeClass) {
-        // Remove old style tag
-        const oldStyle = document.getElementById('preview-style');
-        if (oldStyle) oldStyle.remove();
+        function updatePreview(cssContent, scopeClass) {
+            // Remove old style tag
+            const oldStyle = document.getElementById('preview-style');
+            if (oldStyle) oldStyle.remove();
 
-        // Add new style tag
-        const style = document.createElement('style');
-        style.id = 'preview-style';
-        style.innerHTML = cssContent;
-        document.head.appendChild(style);
+            // Add new style tag
+            const style = document.createElement('style');
+            style.id = 'preview-style';
+            style.innerHTML = cssContent;
+            document.head.appendChild(style);
 
-        // Apply scope class to wrapper
-        const wrapper = document.getElementById('previewWrapper');
-        // Clean class (remove dot)
-        const cleanClass = scopeClass.replace('.', '');
-        wrapper.className = cleanClass + " p-4 border border-dashed border-slate-300";
-    }
+            // Apply scope class to wrapper
+            const wrapper = document.getElementById('previewWrapper');
+            // Remove the dot for classList
+            const cleanClass = scopeClass.replace('.', '');
+            
+            // Reset class list then add the new scope
+            wrapper.className = ""; 
+            wrapper.classList.add(cleanClass);
+        }
 
-    function copyToClipboard() {
-        const copyText = document.getElementById("outputCSS");
-        copyText.select();
-        navigator.clipboard.writeText(copyText.value).then(() => {
-            alert("CSS Copied!");
-        });
-    }
-    
-    // Run once on load
-    window.onload = buildTheme;
+        function copyToClipboard() {
+            const copyText = document.getElementById("outputCSS");
+            if (!copyText.value || copyText.value.startsWith("/* Click")) {
+                alert("Run the builder first.");
+                return;
+            }
+            copyText.select();
+            navigator.clipboard.writeText(copyText.value).then(() => {
+                const btn = document.querySelector('.btn-ghost');
+                const original = btn.innerText;
+                btn.innerText = "Copied!";
+                setTimeout(() => btn.innerText = original, 1500);
+            });
+        }
+        
+        // Auto-run on load to show initial state
+        window.onload = buildTheme;
 
-</script>
+    </script>
+</body>
+</html>

@@ -1,45 +1,230 @@
----
-layout: default
-title: The Living Syllabus
----
-
-<p class="gh-content" style="font-size: 1.25rem; opacity: 0.9; margin-bottom: 3rem; text-align: center; max-width: 720px; margin-left: auto; margin-right: auto;">
-    A "Syllabus as Code" workflow for educators. <br>
-    Escape the LMS rich text editor and generate beautiful, accessible, and resilient course materials directly from Markdown or Word.
-</p>
-
-<div style="display: flex; flex-wrap: wrap; gap: 1.5rem;">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Living Syllabus | Home</title>
     
-    <a href="generate.html" style="text-decoration: none; color: inherit; flex: 1; min-width: 280px;">
-        <div style="border: 2px solid rgba(0,0,0,0.1); padding: 1.5rem; border-radius: 8px; height: 100%; transition: transform 0.2s;">
-            <div style="font-size: 2rem; margin-bottom: 1rem;">⚙️</div>
-            <h3 style="margin: 0 0 0.5rem 0; font-size: 1.25rem;">The Generator</h3>
-            <p style="margin: 0; opacity: 0.7;">Turn your <code>.md</code> or <code>.docx</code> files into clean, styled HTML ready for Canvas/LMS.</p>
-        </div>
-    </a>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 
-    <a href="theme-builder.html" style="text-decoration: none; color: inherit; flex: 1; min-width: 280px;">
-        <div style="border: 2px solid rgba(0,0,0,0.1); padding: 1.5rem; border-radius: 8px; height: 100%; transition: transform 0.2s;">
-            <div style="font-size: 2rem; margin-bottom: 1rem;">🎨</div>
-            <h3 style="margin: 0 0 0.5rem 0; font-size: 1.25rem;">Theme Builder</h3>
-            <p style="margin: 0; opacity: 0.7;">Create and "scope" custom CSS themes to match your institution's branding.</p>
-        </div>
-    </a>
+    <style>
+        /* --- THINGHOOD / GREY.CSS AESTHETIC --- */
+        
+        :root {
+            --font-stack: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --background-color: #e4e9ee; /* Thinghood BG */
+            --card-bg: #ffffff;
+            --text-main: #15171a;
+            --text-muted: #738a94;
+            --accent-color: #4a5568; 
+            --border-color: rgba(0,0,0,0.08);
+            --radius: 5px;
+        }
 
-    <a href="https://thing.rodeo/living-syllabus/" style="text-decoration: none; color: inherit; flex: 1; min-width: 280px;">
-        <div style="border: 2px solid rgba(0,0,0,0.1); padding: 1.5rem; border-radius: 8px; height: 100%; transition: transform 0.2s;">
-            <div style="font-size: 2rem; margin-bottom: 1rem;">📖</div>
-            <h3 style="margin: 0 0 0.5rem 0; font-size: 1.25rem;">The Philosophy</h3>
-            <p style="margin: 0; opacity: 0.7;">Read the "Syllabus as Code" manifesto and full documentation on the project blog.</p>
-        </div>
-    </a>
+        body {
+            background-color: var(--background-color);
+            color: var(--text-main);
+            font-family: var(--font-stack);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
 
-    <a href="https://github.com/ryanncode/living-syllabus" style="text-decoration: none; color: inherit; flex: 1; min-width: 280px;">
-        <div style="border: 2px solid rgba(0,0,0,0.1); padding: 1.5rem; border-radius: 8px; height: 100%; transition: transform 0.2s;">
-            <div style="font-size: 2rem; margin-bottom: 1rem;">💻</div>
-            <h3 style="margin: 0 0 0.5rem 0; font-size: 1.25rem;">Source Code</h3>
-            <p style="margin: 0; opacity: 0.7;">Download the engine, contribute issues, or fork the repository on GitHub.</p>
-        </div>
-    </a>
+        /* Layout Container */
+        .gh-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 4vw;
+        }
 
-</div>
+        /* --- NAVIGATION --- */
+        .gh-head {
+            padding: 30px 0;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .gh-logo {
+            font-weight: 800;
+            font-size: 1.8rem;
+            color: var(--text-main);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+
+        .gh-menu {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .gh-menu a {
+            color: var(--text-main);
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 0.95rem;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+        .gh-menu a:hover { opacity: 1; }
+        .gh-menu a.active { opacity: 1; text-decoration: underline; text-underline-offset: 4px; }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            text-align: center;
+            max-width: 760px;
+            margin: 40px auto 60px auto;
+        }
+
+        .hero p {
+            font-size: 1.35rem;
+            font-weight: 300;
+            color: var(--text-main);
+            line-height: 1.5;
+            opacity: 0.95;
+        }
+        
+        .hero-sub {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-top: 15px;
+        }
+
+        /* --- NAVIGATION CARDS --- */
+        .gh-card-link {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            height: 100%;
+        }
+
+        .gh-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
+            padding: 40px;
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Hover Effect for Link Cards */
+        .gh-card-link:hover .gh-card {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.06);
+            border-color: rgba(0,0,0,0.12);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            margin: 0 0 10px 0;
+            color: var(--text-main);
+            letter-spacing: -0.01em;
+        }
+
+        .card-desc {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        /* Grid Layout */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .grid-2 { grid-template-columns: 1fr; }
+            .hero p { font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="gh-inner">
+        <header class="gh-head">
+            <a href="index.html" class="gh-logo">Living Syllabus</a>
+            <nav>
+                <ul class="gh-menu">
+                    <li><a href="index.html" class="active">Home</a></li>
+                    <li><a href="generate.html">Generate</a></li>
+                    <li><a href="theme-builder.html">Theme Builder</a></li>
+                </ul>
+            </nav>
+        </header>
+    </div>
+
+    <div class="gh-inner">
+        
+        <div class="hero">
+            <p>
+                A "Syllabus as Code" workflow for educators. <br>
+                <span class="hero-sub">Escape the LMS rich text editor and generate beautiful, accessible, and resilient course materials directly from Markdown or Word.</span>
+            </p>
+        </div>
+
+        <div class="grid-2" style="margin-bottom: 80px;">
+            
+            <a href="generate.html" class="gh-card-link">
+                <article class="gh-card">
+                    <span class="card-icon">⚙️</span>
+                    <h3 class="card-title">The Generator</h3>
+                    <p class="card-desc">Turn your <code>.docx</code> or <code>.md</code> files into clean, styled HTML ready for Canvas/LMS.</p>
+                </article>
+            </a>
+
+            <a href="theme-builder.html" class="gh-card-link">
+                <article class="gh-card">
+                    <span class="card-icon">🎨</span>
+                    <h3 class="card-title">Theme Builder</h3>
+                    <p class="card-desc">Create and "scope" custom CSS themes to match your institution's branding without conflicts.</p>
+                </article>
+            </a>
+
+            <a href="https://thing.rodeo/living-syllabus/" class="gh-card-link">
+                <article class="gh-card">
+                    <span class="card-icon">📖</span>
+                    <h3 class="card-title">The Philosophy</h3>
+                    <p class="card-desc">Read the "Syllabus as Code" manifesto and full documentation on the project blog.</p>
+                </article>
+            </a>
+
+            <a href="https://github.com/ryanncode/living-syllabus" class="gh-card-link">
+                <article class="gh-card">
+                    <span class="card-icon">💻</span>
+                    <h3 class="card-title">Source Code</h3>
+                    <p class="card-desc">Download the engine, contribute issues, or fork the repository on GitHub.</p>
+                </article>
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="gh-inner" style="padding-bottom: 60px; text-align: center; color: var(--text-muted); font-size: 0.85rem;">
+        Thinghood Limited &copy; 2026. Powered by standard web technologies.
+    </div>
+
+</body>
+</html>
