@@ -39,8 +39,9 @@ Instead of creating files manually, download the pre-built engine from this repo
 
 **You now have the complete setup:**
 * `generate.js` (The Engine)
+* `Makefile` (The Automation Script)
 * `/themes` folder (The Style Closet)
-* `syllabus.md` (A sample file)
+* `/content` folder (Your Course Materials)
 
 ### 1.4. Initialization
 
@@ -108,42 +109,23 @@ As you build out an entire course, running commands manually for every file can 
 
 If you use Linux or macOS, a Makefile is the robust way to handle "builds." This allows you to type `make` to rebuild every file in your folder at once.
 
-**1. Create a file named `Makefile` (no extension)**
+The included `Makefile` is pre-configured to handle the **Modular Course Structure** in your `/content` folder. It automatically applies specific themes to specific folder types:
 
-```makefile
-# Configuration
-THEME = academic
-GENERATOR = generate.js
-SRCS = $(wildcard *.md)
-OBJS = $(SRCS:.md=_$(THEME).html)
+* **Syllabus** (`/content/syllabus/`) → **Academic Theme**
+* **Assignments** (`/content/assignments/`) → **Paper Theme**
+* **Pages** (`/content/pages/`) → **Modern Theme**
+* **Announcements** (`/content/announcements/`) → **Brutalist Theme**
+* **Discussions** (`/content/discussions/`) → **Simple Theme**
 
-# The "Phony" targets (commands that aren't files)
-.PHONY: all clean help
+**Customizing Your Workflow:**
+You are free to create new subfolders or add files anywhere in the `/content` directory. The Makefile is smart enough to find them. Any file not in one of the specific folders listed above will be automatically compiled using the **Default (Academic) Theme**.
 
-# Default target: Build everything
-all: $(OBJS)
+**How to use it:**
 
-# The Pattern Rule: How to build an .html file from an .md file
-%_$(THEME).html: %.md
- @echo "🔨 Building $@ from $<..."
- @node $(GENERATOR) $< $(THEME)
-
-# Clean up generated files
-clean:
- @echo "🧹 Cleaning up HTML files..."
- @rm -f *_$(THEME).html
-
-# Help command
-help:
- @echo "Usage:"
- @echo "  make        - Build all markdown files using the '$(THEME)' theme"
- @echo "  make clean  - Remove all generated HTML files"
-```
-
-**2. How to use it**
 * **Build everything:** `make`
-* **Build with a different theme:** `make THEME=modern`
 * **Clean up:** `make clean`
+
+You can edit the `Makefile` text file directly to change which themes are assigned to which folders.
 
 ### Option 2: The "Watcher" (Live Preview)
 

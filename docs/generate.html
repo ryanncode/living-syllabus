@@ -214,7 +214,13 @@
                         <option value="paper.css">Paper (Notebook Style)</option>
                         <option value="tacit.css">Tacit (No-Class)</option>
                     </select>
-                    <p class="subtext">Choose the CSS theme that will be embedded in your code.</p>
+                    <p class="subtext">Choose a preset theme...</p>
+                    
+                    <div style="margin-top: 15px; border-top: 1px dashed #dce1e6; padding-top: 10px;">
+                        <label for="customThemeInput" style="font-size: 0.75rem;">Or Upload Custom CSS</label>
+                        <input type="file" id="customThemeInput" accept=".css" />
+                        <p class="subtext">Upload your own .css file to override the selection above.</p>
+                    </div>
                 </div>
 
                 <div>
@@ -266,6 +272,28 @@
 
         let generatedHTML = "";
         let lastRawHTML = ""; 
+        let customCssContent = null;
+        let customCssFilename = null;
+
+        // Custom Theme Listener
+        document.getElementById('customThemeInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (!file) {
+                customCssContent = null;
+                customCssFilename = null;
+                if(lastRawHTML) applyTheme(lastRawHTML);
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                customCssContent = e.target.result;
+                customCssFilename = file.name;
+                // Re-apply theme if content is already loaded
+                if(lastRawHTML) applyTheme(lastRawHTML);
+            };
+            reader.readAsText(file);
+        });
 
         // Listener
         document.getElementById('uploadInput').addEventListener('change', function(event) {
@@ -303,14 +331,25 @@
             const themeFilename = document.getElementById('themeSelector').value;
             const previewEl = document.getElementById('preview');
             
+            // Determine active theme source
+            let activeThemeName = themeFilename;
+            let isCustom = false;
+            
+            if (customCssContent) {
+                activeThemeName = customCssFilename + " (Custom)";
+                isCustom = true;
+            }
+            
             // Loading state
-            previewEl.innerHTML = `<div style="text-align: center; margin-top: 80px; color: #a0aec0;"><p>Fetching ${themeFilename}...</p></div>`;
+            previewEl.innerHTML = `<div style="text-align: center; margin-top: 80px; color: #a0aec0;"><p>Applying ${activeThemeName}...</p></div>`;
 
-            const cssUrl = getThemeUrl(themeFilename);
             let cssContent = "";
             
             try {
-                if (themeFilename) {
+                if (isCustom) {
+                    cssContent = customCssContent;
+                } else if (themeFilename) {
+                    const cssUrl = getThemeUrl(themeFilename);
                     const response = await fetch(cssUrl);
                     if (!response.ok) throw new Error("Failed to load theme");
                     cssContent = await response.text();
@@ -330,7 +369,7 @@
             // Scoped CSS
             const scopedStyle = `
 <style>
-/* Theme: ${themeFilename} */
+/* Theme: ${activeThemeName} */
 .canvas-component-wrapper {
     font-family: system-ui, -apple-system, sans-serif;
     line-height: 1.5;
