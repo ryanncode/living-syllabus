@@ -348,19 +348,60 @@
                     <div id="previewWrapper">
                         <h1>Introduction to Philosophy</h1>
                         <p>This course explores the fundamental questions of human existence. The syllabus demonstrates how <a href="#">inline links</a>, buttons, and typography will appear in your LMS.</p>
-                        
-                        <h3>Course Materials</h3>
-                        <ul>
-                            <li>Plato's <em>Republic</em></li>
-                            <li>Descartes' <em>Meditations</em></li>
-                            <li>Kant's <em>Critique of Pure Reason</em></li>
-                        </ul>
 
+                        <hr />
+
+                        <h2>Course Highlights (Accent 2)</h2>
+                        <p>We use <mark>highlighting</mark> to draw attention to key terms. You might also see <code>inline code</code> for technical concepts.</p>
+
+                        <h3>Data & Evidence</h3>
+                        <table style="width: 100%; border-collapse: collapse; margin-bottom: 1.5rem;">
+                            <thead>
+                                <tr>
+                                    <th style="text-align: left; padding: 8px;">Philosopher</th>
+                                    <th style="text-align: left; padding: 8px;">Era</th>
+                                    <th style="text-align: left; padding: 8px;">Key Work</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 8px; border-bottom: 1px solid #eee;">Plato</td>
+                                    <td style="padding: 8px; border-bottom: 1px solid #eee;">Ancient</td>
+                                    <td style="padding: 8px; border-bottom: 1px solid #eee;">The Republic</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px; border-bottom: 1px solid #eee;">Kant</td>
+                                    <td style="padding: 8px; border-bottom: 1px solid #eee;">Modern</td>
+                                    <td style="padding: 8px; border-bottom: 1px solid #eee;">Pure Reason</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h3>Structure & Interaction (Accent 1)</h3>
+                        
                         <blockquote>
                             "The unexamined life is not worth living." — Socrates
                         </blockquote>
 
-                        <p>
+                        <details>
+                            <summary style="cursor: pointer; padding: 8px 0;">Click to reveal the reading list</summary>
+                            <ul style="margin-top: 10px;">
+                                <li>Plato's <em>Republic</em></li>
+                                <li>Descartes' <em>Meditations</em></li>
+                                <li>Nietzsche's <em>Beyond Good and Evil</em></li>
+                            </ul>
+                        </details>
+
+                        <div style="margin-top: 20px;">
+                            <h4>Code Sample</h4>
+                            <pre style="padding: 15px; border-radius: 4px; overflow-x: auto;"><code>def think():
+    return "I am"
+
+if think():
+    exist = True</code></pre>
+                        </div>
+
+                        <p style="margin-top: 30px;">
                             <button>Download Syllabus</button>
                             <button style="background:transparent; border: 1px solid currentColor; color: inherit; opacity: 0.7;">View Schedule</button>
                         </p>
@@ -532,7 +573,7 @@
                 // This block injects the "Semantic Safety" logic.
                 // It overrides the base theme's variables and enforces the Structure/Data split.
                 const rootOverride = `
-/* LIVING SYLLABUS: DUAL ACCENT THEME (${activeThemeName}) */
+/* LIVING SYLLABUS (${activeThemeName}) */
 ${scope} {
     /* --- CSS VARIABLES --- */
     /* We define these locally so they don't leak out of the scope */
