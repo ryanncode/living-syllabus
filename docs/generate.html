@@ -250,6 +250,15 @@
                             <button id="clearCustomTheme" style="background: none; border: none; color: #ef4444; cursor: pointer; font-size: 1.4rem; padding: 0; line-height: 1; display: flex; align-items: center;" title="Remove Custom Theme">&times;</button>
                         </div>
                     </div>
+
+                    <!-- CSS SCOPE CLASS -->
+                    <div>
+                        <label for="scopeClass">CSS Scope Class</label>
+                        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px; line-height: 1.4;">
+                            Unique wrapper name. Change this if using multiple themes on one page.
+                        </p>
+                        <input type="text" id="scopeClass" value=".canvas-component-wrapper" placeholder=".my-class">
+                    </div>
                 </div>
 
                 <!-- COL 2: DUAL ACCENTS -->
@@ -500,6 +509,11 @@
             const acc2 = document.getElementById('accent2').value;
             const acc1Rgb = hexToRgb(acc1);
             const acc2Rgb = hexToRgb(acc2);
+            
+            // Get Scope Class
+            const scopeInput = document.getElementById('scopeClass').value || ".canvas-component-wrapper";
+            const scope = scopeInput.trim();
+            const cleanScope = scope.replace('.', ''); // For class attribute
 
             // Determine active theme source (Custom vs Preset)
             let activeThemeName = themeFilename;
@@ -540,10 +554,23 @@
             // We inline the CSS directly into the HTML block.
             // This ensures that when the user pastes into Canvas, the styles go with it.
             // We also inject the Variable Overrides for the Dual Accent system.
+
+            // 1. Scope the Base Theme CSS to prevent leaks
+            // We use the same regex logic as theme-builder.html
+            const scopedBaseTheme = cssContent.replace(/([^\r\n,{}]+)(,(?=[^}]*{)|\s*{)/g, (match, selector, separator) => {
+                selector = selector.trim();
+                // Ignore @media, keyframes, html, :root
+                if (selector.startsWith('@') || selector.startsWith(':root') || selector === 'html') return match;
+                // Map generic 'body' to the scope container
+                if (selector === 'body') return `${scope} ${separator}`;
+                // Prepend scope to everything else
+                return `${scope} ${selector} ${separator}`;
+            });
+
             const scopedStyle = `
 <style>
 /* Theme: ${activeThemeName} */
-.canvas-component-wrapper {
+${scope} {
     font-family: system-ui, -apple-system, sans-serif;
     line-height: 1.5;
     color: #333; /* Default safety color */
@@ -561,42 +588,41 @@
 }
 
 /* --- ACCENT 1: STRUCTURE & INTERACTION --- */
-.canvas-component-wrapper a, .canvas-component-wrapper a:visited { color: var(--acc1); }
-.canvas-component-wrapper button, .canvas-component-wrapper input[type="submit"] { 
+${scope} a, ${scope} a:visited { color: var(--acc1); }
+${scope} button, ${scope} input[type="submit"] { 
     background-color: var(--acc1) !important; color: #fff !important; 
     border: 1px solid var(--acc1) !important;
 }
-.canvas-component-wrapper summary { color: var(--acc1); font-weight: bold; }
-.canvas-component-wrapper h1, .canvas-component-wrapper h2, .canvas-component-wrapper h3 { 
+${scope} summary { color: var(--acc1); font-weight: bold; }
+${scope} h1, ${scope} h2, ${scope} h3 { 
     border-bottom: 2px solid rgba(var(--acc1-rgb), 0.15); 
 }
-.canvas-component-wrapper blockquote { 
+${scope} blockquote { 
     border-left: 4px solid var(--acc1); 
     background: rgba(var(--acc1-rgb), 0.05);
 }
 
 /* --- ACCENT 2: DATA & HIGHLIGHTS --- */
-.canvas-component-wrapper code, .canvas-component-wrapper pre, .canvas-component-wrapper samp { 
+${scope} code, ${scope} pre, ${scope} samp { 
     background-color: rgba(var(--acc2-rgb), 0.15); 
     color: inherit; 
 }
-.canvas-component-wrapper th { 
+${scope} th { 
     background-color: rgba(var(--acc2-rgb), 0.1); 
     border-bottom: 2px solid var(--acc2); 
 }
-.canvas-component-wrapper mark { 
+${scope} mark { 
     background-color: rgba(var(--acc2-rgb), 0.3); 
     color: inherit; 
 }
-.canvas-component-wrapper li::marker { color: var(--acc2); }
-.canvas-component-wrapper hr { border-top: 2px solid rgba(var(--acc2-rgb), 0.3); }
+${scope} li::marker { color: var(--acc2); }
+${scope} hr { border-top: 2px solid rgba(var(--acc2-rgb), 0.3); }
 
 /* --- BASE THEME CSS --- */
-/* We scope the base theme to our wrapper class to prevent leaks */
-${cssContent.replace(/body/g, '.canvas-component-wrapper')}
+${scopedBaseTheme}
 </style>
 `;
-            container.className = "canvas-component-wrapper";
+            container.className = cleanScope;
             container.innerHTML = wrapper.innerHTML;
             
             // Shadow DOM for isolation in Preview
@@ -607,18 +633,23 @@ ${cssContent.replace(/body/g, '.canvas-component-wrapper')}
             }
             previewEl.shadowRoot.innerHTML = `
                 ${scopedStyle}
-                <div class="canvas-component-wrapper">
+                <div class="${cleanScope}">
                     ${wrapper.innerHTML}
                 </div>
             `;
             
             // Final Output Generation
             // This is the string that gets copied to the clipboard.
-            generatedHTML = `\n${scopedStyle}\n<div class="canvas-component-wrapper">\n${wrapper.innerHTML}\n</div>`;
+            generatedHTML = `\n${scopedStyle}\n<div class="${cleanScope}">\n${wrapper.innerHTML}\n</div>`;
         }
 
         // Re-run application when the theme selector changes
         document.getElementById('themeSelector').addEventListener('change', function() {
+            if(lastRawHTML) applyTheme(lastRawHTML);
+        });
+
+        // Re-run application when the scope class changes
+        document.getElementById('scopeClass').addEventListener('input', function() {
             if(lastRawHTML) applyTheme(lastRawHTML);
         });
 

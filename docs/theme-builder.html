@@ -272,6 +272,15 @@
                             <button id="clearCustomTheme" style="background: none; border: none; color: #ef4444; cursor: pointer; font-size: 1.4rem; padding: 0; line-height: 1; display: flex; align-items: center;" title="Remove Custom Theme">&times;</button>
                         </div>
                     </div>
+
+                    <!-- CSS SCOPE CLASS -->
+                    <div>
+                        <label for="scopeClass">CSS Scope Class</label>
+                        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px; line-height: 1.4;">
+                            Unique wrapper name. Change this if using multiple themes on one page.
+                        </p>
+                        <input type="text" id="scopeClass" value=".living-syllabus" placeholder=".my-class">
+                    </div>
                 </div>
                 
                 <!-- STEP 2: DUAL ACCENT SYSTEM (The core "Semantic Safety" feature) -->
@@ -297,15 +306,6 @@
                     <div class="color-group">
                         <input type="color" id="accent2" value="#0d9488"> <input type="text" id="accent2Hex" value="#0D9488">
                     </div>
-                </div>
-
-                <!-- STEP 3: SCOPING CLASS -->
-                <div>
-                    <label for="scopeClass">3. CSS Scope Class</label>
-                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px; line-height: 1.4;">
-                        The unique class name for your course wrapper. Prevents styles from leaking.
-                    </p>
-                    <input type="text" id="scopeClass" value=".living-syllabus" placeholder=".my-class">
                 </div>
             </div>
         </div>
