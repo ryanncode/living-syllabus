@@ -14,15 +14,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 
     <style>
-        /* --- THINGHOOD / GREY.CSS AESTHETIC --- */
         
         :root {
             --font-stack: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            --background-color: #e4e9ee; /* Thinghood BG */
+            --background-color: #e4e9ee;
             --card-bg: #ffffff;
             --text-main: #15171a;
             --text-muted: #738a94;
-            --accent-color: #4a5568; /* Ghost Accent */
+            --accent-color: #4a5568;
             --border-color: rgba(0,0,0,0.08);
             --radius: 5px;
         }
@@ -37,14 +36,14 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Layout Container (Matches Thinghood 'gh-inner') */
+        /* Layout Container */
         .gh-inner {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 4vw;
         }
 
-        /* --- NAVIGATION (Matches Thinghood Header) --- */
+        /* --- NAVIGATION --- */
         .gh-head {
             padding: 30px 0;
             margin-bottom: 40px;
@@ -80,7 +79,7 @@
         .gh-menu a:hover { opacity: 1; }
         .gh-menu a.active { opacity: 1; text-decoration: underline; text-underline-offset: 4px; }
 
-        /* --- CARDS (Matches Thinghood Posts) --- */
+        /* --- CARDS --- */
         .gh-card {
             background: var(--card-bg);
             border-radius: var(--radius);
@@ -140,7 +139,7 @@
             font-family: var(--font-stack);
         }
 
-        /* --- ACTION BUTTON (Matches Thinghood Footer Subscribe) --- */
+        /* --- ACTION BUTTON --- */
         .btn-action {
             background-color: #15171a;
             color: #fff;
@@ -160,7 +159,7 @@
         /* --- PREVIEW AREA --- */
         #preview {
             min-height: 500px;
-            background: #fff; /* Ensure white canvas for preview */
+            background: #fff;
             border: 1px solid #e1e1e1;
             padding: 40px;
             border-radius: 4px;
@@ -168,12 +167,27 @@
         }
         
         /* Utility */
-        .grid-2 {
+        .grid-3 {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
         }
-        @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { .grid-3 { grid-template-columns: 1fr; } }
+
+        /* Custom Color Picker Wrapper */
+        .color-group {
+            display: flex;
+            gap: 10px;
+        }
+        .color-group input[type="color"] {
+            width: 60px;
+            padding: 2px;
+            cursor: pointer;
+        }
+        .color-group input[type="text"] {
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+        }
         
         .subtext {
             color: var(--text-muted);
@@ -200,7 +214,12 @@
     <div class="gh-inner">
         
         <div class="gh-card">
-            <div class="grid-2">
+            <div class="gh-card-header">
+                <h2 class="gh-card-title">Configuration</h2>
+            </div>
+
+            <div class="grid-3">
+                <!-- COL 1: THEME SELECTION -->
                 <div style="display: flex; flex-direction: column; gap: 15px;">
                     <div>
                         <label for="themeSelector">1. Select Style</label>
@@ -233,8 +252,31 @@
                     </div>
                 </div>
 
+                <!-- COL 2: DUAL ACCENTS -->
                 <div>
-                    <label for="uploadInput">2. Upload Content</label>
+                    <label for="accent1">2. Accent 1 (Structure)</label>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px; line-height: 1.4;">
+                        Links, headers, and navigation.
+                    </p>
+                    <div class="color-group" style="margin-bottom: 5px;">
+                        <input type="color" id="accent1" value="#0f172a"> <input type="text" id="accent1Hex" value="#0F172A">
+                    </div>
+                    <div id="contrastWarning" style="display:none; color: #ef4444; font-size: 0.75rem; margin-bottom: 20px; font-weight: 600;">
+                        ⚠️ Contrast too low for text!
+                    </div>
+
+                    <label for="accent2">3. Accent 2 (Highlight)</label>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px; line-height: 1.4;">
+                        Data, code, and emphasis.
+                    </p>
+                    <div class="color-group">
+                        <input type="color" id="accent2" value="#0d9488"> <input type="text" id="accent2Hex" value="#0D9488">
+                    </div>
+                </div>
+
+                <!-- COL 3: CONTENT UPLOAD -->
+                <div>
+                    <label for="uploadInput">4. Upload Content</label>
                     <div style="height: 100%; display: flex; flex-direction: column;">
                         <input type="file" id="uploadInput" accept=".docx, .md, .markdown" style="height: 100px; padding-top: 35px;" />
                         <p class="subtext">Supports Microsoft Word (.docx) or Markdown (.md).</p>
@@ -276,25 +318,105 @@
     </div>
 
     <script>
-        // --- LOGIC: SAME AS ORIGINAL, JUST ADAPTED TO DOM ---
-        
+        /* 
+           ==========================================================================
+           GENERATOR LOGIC
+           ==========================================================================
+           This script handles the core "Content Transformation" workflow:
+           1. It accepts raw files (.docx or .md).
+           2. It converts them to clean HTML.
+           3. It wraps them in a "Theme" (CSS) for instant styling.
+           4. It packages the result for easy copying into Canvas/LMS.
+        */
+
+        // Use relative paths to local themes folder to avoid CORS issues
         function getThemeUrl(filename) {
             return "./themes/" + filename;
         }
+
+        // Helper to convert Hex to RGB numbers (e.g., "255, 0, 0") 
+        function hexToRgb(hex) {
+            hex = hex.replace(/^#/, '');
+            const bigint = parseInt(hex, 16);
+            const r = (bigint >> 16) & 255;
+            const g = (bigint >> 8) & 255;
+            const b = bigint & 255;
+            return `${r}, ${g}, ${b}`;
+        }
+
+        /* 
+           --- ACCESSIBILITY CHECKS ---
+           We calculate the relative luminance of the chosen "Structure" color 
+           to ensure it has enough contrast against a white background.
+           Formula: https://www.w3.org/TR/WCAG20/#relativeluminancedef
+        */
+        function getLuminance(r, g, b) {
+            var a = [r, g, b].map(function (v) {
+                v /= 255;
+                return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+            });
+            return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
+        }
+
+        function checkContrast(hexColor) {
+            const rgbStr = hexToRgb(hexColor);
+            const [r, g, b] = rgbStr.split(',').map(Number);
+            const lum = getLuminance(r, g, b);
+            
+            // WCAG AA standard for normal text is 4.5:1.
+            const contrastRatio = 1.05 / (lum + 0.05);
+            const warning = document.getElementById('contrastWarning');
+            
+            if (contrastRatio < 4.5) {
+                warning.style.display = 'block';
+                warning.textContent = `⚠️ Low Contrast (${contrastRatio.toFixed(1)}:1). Text might be hard to read.`;
+            } else {
+                warning.style.display = 'none';
+            }
+        }
+
+        /* 
+           --- UI SYNCHRONIZATION ---
+           Keeps the Color Picker (Input type="color") and the Hex Text Box (Input type="text") in sync.
+           Also triggers the accessibility check whenever Accent 1 changes.
+           Triggers applyTheme() to update the preview immediately.
+        */
+        ['accent1', 'accent2'].forEach(id => {
+            const colorInput = document.getElementById(id);
+            const hexInput = document.getElementById(id + 'Hex');
+            
+            const updateAndCheck = (val) => {
+                if (id === 'accent1') checkContrast(val);
+                if(lastRawHTML) applyTheme(lastRawHTML);
+            };
+
+            colorInput.addEventListener('input', (e) => {
+                hexInput.value = e.target.value.toUpperCase();
+                updateAndCheck(e.target.value);
+            });
+            
+            hexInput.addEventListener('input', (e) => {
+                colorInput.value = e.target.value;
+                updateAndCheck(e.target.value);
+            });
+        });
 
         let generatedHTML = "";
         let lastRawHTML = ""; 
         let customCssContent = null;
         let customCssFilename = null;
 
-        // Custom Theme Listener
+        /* 
+           --- CUSTOM THEME UPLOAD ---
+           Allows users to override the preset themes with their own CSS file.
+           This is useful for institutions with strict branding guidelines.
+        */
         document.getElementById('customThemeInput').addEventListener('change', function(event) {
             const file = event.target.files[0];
             const displayDiv = document.getElementById('customFileDisplay');
             const label = document.getElementById('customFileLabel');
             
             if (!file) {
-                // Handled by clear button logic mainly, but safety here
                 return;
             }
 
@@ -305,7 +427,7 @@
             reader.onload = function(e) {
                 customCssContent = e.target.result;
                 customCssFilename = file.name;
-                // Re-apply theme if content is already loaded
+                // Re-apply theme if content is already loaded so the user sees the change immediately
                 if(lastRawHTML) applyTheme(lastRawHTML);
             };
             reader.readAsText(file);
@@ -326,7 +448,12 @@
             if(lastRawHTML) applyTheme(lastRawHTML);
         });
 
-        // Listener
+        /* 
+           --- FILE PROCESSING ---
+           Handles the file upload event.
+           - Uses Mammoth.js for .docx conversion (preserves basic formatting).
+           - Uses Marked.js for .md conversion (standard markdown parsing).
+        */
         document.getElementById('uploadInput').addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -358,11 +485,23 @@
             }
         });
 
+        /* 
+           ==========================================================================
+           CORE APPLICATION LOGIC
+           ==========================================================================
+           Combines the converted HTML content with the selected CSS theme.
+        */
         async function applyTheme(htmlContent) {
             const themeFilename = document.getElementById('themeSelector').value;
             const previewEl = document.getElementById('preview');
             
-            // Determine active theme source
+            // Get Accent Colors
+            const acc1 = document.getElementById('accent1').value;
+            const acc2 = document.getElementById('accent2').value;
+            const acc1Rgb = hexToRgb(acc1);
+            const acc2Rgb = hexToRgb(acc2);
+
+            // Determine active theme source (Custom vs Preset)
             let activeThemeName = themeFilename;
             let isCustom = false;
             
@@ -397,7 +536,10 @@
             const container = document.createElement('div');
             container.setAttribute('style', "max-width: 800px; margin: 0 auto;");
             
-            // Scoped CSS
+            // Scoped CSS Construction
+            // We inline the CSS directly into the HTML block.
+            // This ensures that when the user pastes into Canvas, the styles go with it.
+            // We also inject the Variable Overrides for the Dual Accent system.
             const scopedStyle = `
 <style>
 /* Theme: ${activeThemeName} */
@@ -405,14 +547,60 @@
     font-family: system-ui, -apple-system, sans-serif;
     line-height: 1.5;
     color: #333; /* Default safety color */
+    
+    /* --- INJECTED VARIABLES --- */
+    --acc1: ${acc1};
+    --acc2: ${acc2};
+    --acc1-rgb: ${acc1Rgb}; 
+    --acc2-rgb: ${acc2Rgb};
+
+    /* Map to Library Defaults */
+    --primary: var(--acc1);
+    --accent: var(--acc1);
+    --link: var(--acc1);
 }
-${cssContent}
+
+/* --- ACCENT 1: STRUCTURE & INTERACTION --- */
+.canvas-component-wrapper a, .canvas-component-wrapper a:visited { color: var(--acc1); }
+.canvas-component-wrapper button, .canvas-component-wrapper input[type="submit"] { 
+    background-color: var(--acc1) !important; color: #fff !important; 
+    border: 1px solid var(--acc1) !important;
+}
+.canvas-component-wrapper summary { color: var(--acc1); font-weight: bold; }
+.canvas-component-wrapper h1, .canvas-component-wrapper h2, .canvas-component-wrapper h3 { 
+    border-bottom: 2px solid rgba(var(--acc1-rgb), 0.15); 
+}
+.canvas-component-wrapper blockquote { 
+    border-left: 4px solid var(--acc1); 
+    background: rgba(var(--acc1-rgb), 0.05);
+}
+
+/* --- ACCENT 2: DATA & HIGHLIGHTS --- */
+.canvas-component-wrapper code, .canvas-component-wrapper pre, .canvas-component-wrapper samp { 
+    background-color: rgba(var(--acc2-rgb), 0.15); 
+    color: inherit; 
+}
+.canvas-component-wrapper th { 
+    background-color: rgba(var(--acc2-rgb), 0.1); 
+    border-bottom: 2px solid var(--acc2); 
+}
+.canvas-component-wrapper mark { 
+    background-color: rgba(var(--acc2-rgb), 0.3); 
+    color: inherit; 
+}
+.canvas-component-wrapper li::marker { color: var(--acc2); }
+.canvas-component-wrapper hr { border-top: 2px solid rgba(var(--acc2-rgb), 0.3); }
+
+/* --- BASE THEME CSS --- */
+/* We scope the base theme to our wrapper class to prevent leaks */
+${cssContent.replace(/body/g, '.canvas-component-wrapper')}
 </style>
 `;
             container.className = "canvas-component-wrapper";
             container.innerHTML = wrapper.innerHTML;
             
             // Shadow DOM for isolation in Preview
+            // We use Shadow DOM here so the "Preview" doesn't inherit styles from the Generator tool itself.
             previewEl.innerHTML = "";
             if (!previewEl.shadowRoot) {
                 previewEl.attachShadow({mode: 'open'});
@@ -425,9 +613,11 @@ ${cssContent}
             `;
             
             // Final Output Generation
+            // This is the string that gets copied to the clipboard.
             generatedHTML = `\n${scopedStyle}\n<div class="canvas-component-wrapper">\n${wrapper.innerHTML}\n</div>`;
         }
 
+        // Re-run application when the theme selector changes
         document.getElementById('themeSelector').addEventListener('change', function() {
             if(lastRawHTML) applyTheme(lastRawHTML);
         });

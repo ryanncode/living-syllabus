@@ -1,4 +1,4 @@
-# Compoent Tool - Living Syllabus
+# Component Blueprints - Living Syllabus
 
 > **Note:** This document is a specialized supplement to the Living Syllabus.
 

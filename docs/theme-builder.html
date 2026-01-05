@@ -12,12 +12,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 
     <style>
-        /* --- THINGHOOD / GREY.CSS AESTHETIC --- */
         
         :root {
             --font-stack: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-            --background-color: #e4e9ee; /* Thinghood BG */
+            --background-color: #e4e9ee;
             --card-bg: #ffffff;
             --text-main: #15171a;
             --text-muted: #738a94;
@@ -227,7 +226,13 @@
     </div>
 
     <div class="gh-inner">
-        
+        <!-- 
+           ==========================================================================
+           UI HEADER: CONFIGURATION PANEL
+           ==========================================================================
+           This section contains all the user inputs required to generate the theme.
+           We group these into logical steps (1, 2, 3) to guide the non-coder user.
+        -->
         <div class="gh-card">
             <div class="gh-card-header">
                 <h2 class="gh-card-title">Configuration</h2>
@@ -235,30 +240,81 @@
             </div>
             
             <div class="grid-3">
-                <div>
-                    <label for="baseTheme">1. Base Theme</label>
-                    <select id="baseTheme">
-                        <option value="water">Water.css (Clean/Invisible)</option>
-                        <option value="simple">Simple.css (Academic/Blog)</option>
-                        <option value="pico">Pico.css (Modern/SaaS)</option>
-                    </select>
+                <!-- STEP 1: BASE THEME SELECTION -->
+                <div style="display: flex; flex-direction: column; gap: 15px;">
+                    <div>
+                        <label for="baseTheme">1. Base Theme</label>
+                        <select id="baseTheme">
+                            <option value="simple.css">Simple (Academic/Blog)</option>
+                            <option value="grey.css">Grey (Classless Academic)</option>
+                            <option value="water.css">Water (Clean/Invisible)</option>
+                            <option value="pico-green.css">Pico Green (Modern/SaaS)</option>
+                            <option value="tufte.css">Tufte (Edward Tufte Style)</option>
+                            <option value="latex.css">LaTeX (Scientific Paper)</option>
+                            <option value="sakura.css">Sakura (Minimalist)</option>
+                            <option value="paper.css">Paper (Notebook Style)</option>
+                            <option value="tacit.css">Tacit (No-Class)</option>
+                        </select>
+                    </div>
+
+                    <!-- OR: CUSTOM UPLOAD -->
+                    <div style="position: relative;">
+                        <div style="display: flex; align-items: center; justify-content: center; width: 100%;">
+                            <label for="customThemeInput" style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 45px; border: 1px dashed #dce1e6; border-radius: 4px; cursor: pointer; background-color: #f8fafc; transition: all 0.2s;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">OR Upload Custom CSS</span>
+                                </div>
+                                <input type="file" id="customThemeInput" accept=".css" style="display: none;" />
+                            </label>
+                        </div>
+                        <div id="customFileDisplay" style="display: none; align-items: center; justify-content: center; gap: 12px; margin-top: 8px;">
+                            <p id="customFileLabel" style="font-size: 0.9rem; font-weight: 500; text-align: center; margin: 0; color: var(--text-main);"></p>
+                            <button id="clearCustomTheme" style="background: none; border: none; color: #ef4444; cursor: pointer; font-size: 1.4rem; padding: 0; line-height: 1; display: flex; align-items: center;" title="Remove Custom Theme">&times;</button>
+                        </div>
+                    </div>
                 </div>
                 
+                <!-- STEP 2: DUAL ACCENT SYSTEM (The core "Semantic Safety" feature) -->
                 <div>
-                    <label for="brandColor">2. Brand Color</label>
+                    <label for="accent1">2. Accent 1 (Structure/Brand)</label>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px; line-height: 1.4;">
+                        The "Authority Voice." Used for navigation, headers, and requirements. 
+                        <strong>Best choice:</strong> Dark/Strong colors (Navy, Maroon, Deep Purple).
+                    </p>
+                    <div class="color-group" style="margin-bottom: 5px;">
+                        <input type="color" id="accent1" value="#0f172a"> <input type="text" id="accent1Hex" value="#0F172A">
+                    </div>
+                    <!-- Accessibility Warning Container -->
+                    <div id="contrastWarning" style="display:none; color: #ef4444; font-size: 0.75rem; margin-bottom: 20px; font-weight: 600;">
+                        ⚠️ Contrast too low for text!
+                    </div>
+
+                    <label for="accent2">3. Accent 2 (Highlight/Vibe)</label>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px; line-height: 1.4;">
+                        The "Content Voice." Used for data, code, and emphasis. 
+                        <strong>Best choice:</strong> Bright/"Dopamine" colors (Teal, Orange, Pink).
+                    </p>
                     <div class="color-group">
-                        <input type="color" id="brandColor" value="#003366">
-                        <input type="text" id="brandColorHex" value="#003366">
+                        <input type="color" id="accent2" value="#0d9488"> <input type="text" id="accent2Hex" value="#0D9488">
                     </div>
                 </div>
 
+                <!-- STEP 3: SCOPING CLASS -->
                 <div>
                     <label for="scopeClass">3. CSS Scope Class</label>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px; line-height: 1.4;">
+                        The unique class name for your course wrapper. Prevents styles from leaking.
+                    </p>
                     <input type="text" id="scopeClass" value=".living-syllabus" placeholder=".my-class">
                 </div>
             </div>
         </div>
 
+        <!-- 
+           ==========================================================================
+           UI OUTPUT: PREVIEW & CODE
+           ==========================================================================
+        -->
         <div class="gh-card">
             <div class="gh-card-header">
                 <h2 class="gh-card-title">Output & Preview</h2>
@@ -279,6 +335,11 @@
                     The styles below are applied <strong>only</strong> if the builder worked correctly.
                 </p>
                 
+                <!-- 
+                   LIVE PREVIEW CONTAINER 
+                   This area simulates the LMS environment. 
+                   The JavaScript will apply the generated "Scope Class" to the #previewWrapper div.
+                -->
                 <div id="previewContainer" class="preview-box">
                     <div id="previewWrapper">
                         <h1>Introduction to Philosophy</h1>
@@ -310,81 +371,236 @@
     </div>
 
     <script>
-        // URLs for raw CSS files (CDN)
-        const SOURCES = {
-            water: 'https://cdn.jsdelivr.net/npm/water.css@2/out/light.css',
-            simple: 'https://cdn.simplecss.org/simple.css',
-            pico: 'https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.classless.min.css'
-        };
+        /* 
+           ==========================================================================
+           THEME BUILDER LOGIC
+           ==========================================================================
+           This script handles the core "Semantic Safety" architecture:
+           1. It takes a "Base Theme" (clean layout).
+           2. It injects "Dual Accent" logic (Brand vs. Content colors).
+           3. It "Scopes" the CSS so it doesn't break the LMS (Canvas/Blackboard).
+        */
 
-        // Sync Hex Text with Color Picker
-        const colorInput = document.getElementById('brandColor');
-        const hexInput = document.getElementById('brandColorHex');
+        // Use relative paths to local themes folder to avoid CORS issues
+        function getThemeUrl(filename) {
+            return "./themes/" + filename;
+        }
 
-        colorInput.addEventListener('input', (e) => hexInput.value = e.target.value.toUpperCase());
-        hexInput.addEventListener('input', (e) => colorInput.value = e.target.value);
+        // Helper to convert Hex to RGB numbers (e.g., "255, 0, 0") 
+        // We use this to create semi-transparent backgrounds (rgba) from solid hex colors.
+        function hexToRgb(hex) {
+            hex = hex.replace(/^#/, '');
+            const bigint = parseInt(hex, 16);
+            const r = (bigint >> 16) & 255;
+            const g = (bigint >> 8) & 255;
+            const b = bigint & 255;
+            return `${r}, ${g}, ${b}`;
+        }
 
+        /* 
+           --- ACCESSIBILITY CHECKS ---
+           We calculate the relative luminance of the chosen "Structure" color 
+           to ensure it has enough contrast against a white background.
+           Formula: https://www.w3.org/TR/WCAG20/#relativeluminancedef
+        */
+        function getLuminance(r, g, b) {
+            var a = [r, g, b].map(function (v) {
+                v /= 255;
+                return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+            });
+            return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
+        }
+
+        function checkContrast(hexColor) {
+            const rgbStr = hexToRgb(hexColor);
+            const [r, g, b] = rgbStr.split(',').map(Number);
+            const lum = getLuminance(r, g, b);
+            
+            // WCAG AA standard for normal text is 4.5:1.
+            // Since Accent 1 is used for Links and Headers on white paper/screens,
+            // we must ensure it is dark enough to be legible.
+            const contrastRatio = 1.05 / (lum + 0.05);
+            const warning = document.getElementById('contrastWarning');
+            
+            if (contrastRatio < 4.5) {
+                warning.style.display = 'block';
+                warning.textContent = `⚠️ Low Contrast (${contrastRatio.toFixed(1)}:1). Text might be hard to read.`;
+            } else {
+                warning.style.display = 'none';
+            }
+        }
+
+        /* 
+           --- UI SYNCHRONIZATION ---
+           Keeps the Color Picker (Input type="color") and the Hex Text Box (Input type="text") in sync.
+           Also triggers the accessibility check whenever Accent 1 changes.
+        */
+        ['accent1', 'accent2'].forEach(id => {
+            const colorInput = document.getElementById(id);
+            const hexInput = document.getElementById(id + 'Hex');
+            
+            const updateAndCheck = (val) => {
+                if (id === 'accent1') checkContrast(val);
+            };
+
+            colorInput.addEventListener('input', (e) => {
+                hexInput.value = e.target.value.toUpperCase();
+                updateAndCheck(e.target.value);
+            });
+            
+            hexInput.addEventListener('input', (e) => {
+                colorInput.value = e.target.value;
+                updateAndCheck(e.target.value);
+            });
+        });
+
+        /* 
+           --- CUSTOM CSS UPLOAD ---
+           Allows advanced users to bypass our presets and upload their own .css file.
+           The builder will still apply scoping and accent variable injection to this file.
+        */
+        let customCssContent = null;
+        let customCssFilename = null;
+
+        document.getElementById('customThemeInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            const displayDiv = document.getElementById('customFileDisplay');
+            const label = document.getElementById('customFileLabel');
+            
+            if (!file) return;
+
+            label.textContent = file.name;
+            displayDiv.style.display = 'flex';
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                customCssContent = e.target.result;
+                customCssFilename = file.name;
+            };
+            reader.readAsText(file);
+        });
+
+        document.getElementById('clearCustomTheme').addEventListener('click', function() {
+            document.getElementById('customThemeInput').value = "";
+            customCssContent = null;
+            customCssFilename = null;
+            document.getElementById('customFileDisplay').style.display = 'none';
+        });
+
+        /* 
+           ==========================================================================
+           CORE BUILD FUNCTION
+           ==========================================================================
+        */
         async function buildTheme() {
-            const themeKey = document.getElementById('baseTheme').value;
-            const primaryColor = document.getElementById('brandColor').value;
+            // 1. INPUT COLLECTION
+            // Gather user selections from the DOM
+            const themeFilename = document.getElementById('baseTheme').value;
+            const acc1 = document.getElementById('accent1').value; // Primary (Structure)
+            const acc2 = document.getElementById('accent2').value; // Secondary (Highlight)
             const scope = document.getElementById('scopeClass').value;
-            const statusLabel = document.getElementById('status');
             const outputArea = document.getElementById('outputCSS');
+
+            // 2. COLOR PROCESSING
+            // Convert Hex to RGB for use in rgba() functions (transparency)
+            // This allows us to create tints without needing separate color variables
+            const acc1Rgb = hexToRgb(acc1);
+            const acc2Rgb = hexToRgb(acc2);
 
             outputArea.value = "Fetching and processing...";
 
             try {
-                // 1. Fetch
-                const response = await fetch(SOURCES[themeKey]);
-                let css = await response.text();
+                // 3. FETCH BASE THEME
+                // Load the selected CSS file (or custom upload) as a text string
+                let css = "";
+                let activeThemeName = themeFilename;
+                if (customCssContent) {
+                    css = customCssContent;
+                    activeThemeName = customCssFilename + " (Custom)";
+                } else {
+                    const cssUrl = getThemeUrl(themeFilename);
+                    const response = await fetch(cssUrl);
+                    if (!response.ok) throw new Error("Failed to load theme");
+                    css = await response.text();
+                }
 
-                // 2. Inject Brand Colors (Root Override)
-                // We create a specific rule for the scope to override the library's defaults
+                // 4. GENERATE DUAL ACCENT SYSTEM
+                // This block injects the "Semantic Safety" logic.
+                // It overrides the base theme's variables and enforces the Structure/Data split.
                 const rootOverride = `
-/* LIVING SYLLABUS: SCOPED THEME (${themeKey}) 
-   Generated: ${new Date().toLocaleDateString()}
-*/
+/* LIVING SYLLABUS: DUAL ACCENT THEME (${activeThemeName}) */
 ${scope} {
-    --primary: ${primaryColor};
-    --accent: ${primaryColor};
-    --link: ${primaryColor};
-    --button-bg: ${primaryColor};
-    --pico-primary: ${primaryColor};
-    --pico-primary-background: ${primaryColor};
-    --pico-primary-underline: ${primaryColor};
+    /* --- CSS VARIABLES --- */
+    /* We define these locally so they don't leak out of the scope */
+    --acc1: ${acc1};
+    --acc2: ${acc2};
+    --acc1-rgb: ${acc1Rgb}; 
+    --acc2-rgb: ${acc2Rgb};
+
+    /* --- LIBRARY MAPPING --- */
+    /* Map our dual accents to common variable names used by base themes (Pico, Simple, etc.) */
+    /* This ensures the base theme adopts our "Brand" color automatically */
+    --primary: var(--acc1);
+    --accent: var(--acc1);
+    --link: var(--acc1);
 }
+
+/* --- ACCENT 1: THE AUTHORITY VOICE (Structure & Interaction) --- */
+/* Used for navigation, requirements, and calls to action */
+${scope} a, ${scope} a:visited { color: var(--acc1); }
+${scope} button, ${scope} input[type="submit"] { 
+    background-color: var(--acc1) !important; color: #fff !important; 
+    border: 1px solid var(--acc1) !important;
+}
+${scope} summary { color: var(--acc1); font-weight: bold; } /* Accordion triggers */
+${scope} h1, ${scope} h2, ${scope} h3 { 
+    border-bottom: 2px solid rgba(var(--acc1-rgb), 0.15); /* Subtle structural divider */
+}
+${scope} blockquote { 
+    border-left: 4px solid var(--acc1); /* Strong vertical anchor */
+    background: rgba(var(--acc1-rgb), 0.05);
+}
+
+/* --- ACCENT 2: THE CONTENT VOICE (Data & Highlights) --- */
+/* Used for evidence, examples, and emphasis. */
+/* Note: We use RGBA tints to ensure readability regardless of the color chosen. */
+${scope} code, ${scope} pre, ${scope} samp { 
+    background-color: rgba(var(--acc2-rgb), 0.15); 
+    color: inherit; /* Inherit text color to prevent contrast issues in dark mode */
+}
+${scope} th { 
+    background-color: rgba(var(--acc2-rgb), 0.1); 
+    border-bottom: 2px solid var(--acc2); 
+}
+${scope} mark { 
+    background-color: rgba(var(--acc2-rgb), 0.3); 
+    color: inherit; 
+}
+${scope} li::marker { color: var(--acc2); } /* Custom bullet points */
+${scope} hr { border-top: 2px solid rgba(var(--acc2-rgb), 0.3); }
 `;
 
-                // 3. Client-Side Scoping (Regex Prefixing)
-                // This captures selectors and prepends the scope class
+                // 5. CLIENT-SIDE SCOPING (Regex Prefixing)
+                // This captures every CSS selector and prepends the unique scope class.
+                // This is what prevents the styles from breaking the rest of the LMS page.
                 let scopedCSS = css.replace(/([^\r\n,{}]+)(,(?=[^}]*{)|\s*{)/g, (match, selector, separator) => {
                     selector = selector.trim();
-                    
-                    // Ignore @media, keyframes, html, :root
-                    if (selector.startsWith('@') || selector.startsWith(':root') || selector === 'html') {
-                        return match; 
-                    }
-                    
-                    // Map generic 'body' to the scope container
-                    if (selector === 'body') {
-                        return `${scope} ${separator}`;
-                    }
-
+                    if (selector.startsWith('@') || selector.startsWith(':root') || selector === 'html') return match;
+                    if (selector === 'body') return `${scope} ${separator}`; // Map body to the wrapper
                     return `${scope} ${selector} ${separator}`;
                 });
 
-                // Combine
+                // 6. FINAL ASSEMBLY & OUTPUT
                 const finalCSS = rootOverride + scopedCSS;
-
-                // 4. Output
                 outputArea.value = finalCSS;
-
-                // 5. Update Preview
                 updatePreview(finalCSS, scope);
 
-                // Animation
-                statusLabel.style.opacity = '1';
-                setTimeout(() => statusLabel.style.opacity = '0', 2500);
+                // Success Animation
+                const statusLabel = document.getElementById('status');
+                if(statusLabel) {
+                    statusLabel.style.opacity = '1';
+                    setTimeout(() => statusLabel.style.opacity = '0', 2500);
+                }
 
             } catch (err) {
                 outputArea.value = "Error: " + err.message;
