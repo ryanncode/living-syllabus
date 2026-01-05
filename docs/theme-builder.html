@@ -236,14 +236,13 @@
         <div class="gh-card">
             <div class="gh-card-header">
                 <h2 class="gh-card-title">Configuration</h2>
-                <button onclick="buildTheme()" class="btn-black">Run Builder</button>
             </div>
             
             <div class="grid-3">
                 <!-- STEP 1: BASE THEME SELECTION -->
                 <div style="display: flex; flex-direction: column; gap: 15px;">
                     <div>
-                        <label for="baseTheme">1. Base Theme</label>
+                        <label for="baseTheme">Base Theme</label>
                         <select id="baseTheme">
                             <option value="simple.css">Simple (Academic/Blog)</option>
                             <option value="grey.css">Grey (Classless Academic)</option>
@@ -285,7 +284,7 @@
                 
                 <!-- STEP 2: DUAL ACCENT SYSTEM (The core "Semantic Safety" feature) -->
                 <div>
-                    <label for="accent1">2. Accent 1 (Structure/Brand)</label>
+                    <label for="accent1">Accent 1 (Structure/Brand)</label>
                     <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px; line-height: 1.4;">
                         The "Authority Voice." Used for navigation, headers, and requirements. 
                         <strong>Best choice:</strong> Dark/Strong colors (Navy, Maroon, Deep Purple).
@@ -298,7 +297,7 @@
                         ⚠️ Contrast too low for text!
                     </div>
 
-                    <label for="accent2">3. Accent 2 (Highlight/Vibe)</label>
+                    <label for="accent2">Accent 2 (Highlight/Vibe)</label>
                     <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px; line-height: 1.4;">
                         The "Content Voice." Used for data, code, and emphasis. 
                         <strong>Best choice:</strong> Bright/"Dopamine" colors (Teal, Orange, Pink).
@@ -306,6 +305,11 @@
                     <div class="color-group">
                         <input type="color" id="accent2" value="#0d9488"> <input type="text" id="accent2Hex" value="#0D9488">
                     </div>
+                </div>
+
+                <!-- STEP 3: ACTION BUTTON -->
+                <div style="display: flex; flex-direction: column; justify-content: flex-end;">
+                    <button onclick="buildTheme()" class="btn-black" style="width: 100%;">Run Builder</button>
                 </div>
             </div>
         </div>

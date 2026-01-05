@@ -108,7 +108,7 @@
             margin-bottom: 8px;
         }
 
-        select, input[type="file"] {
+        select, input[type="file"], input[type="text"] {
             width: 100%;
             padding: 12px;
             border: 1px solid #dce1e6;
@@ -121,7 +121,7 @@
             transition: border-color 0.2s;
         }
 
-        select:focus, input[type="file"]:focus {
+        select:focus, input[type="file"]:focus, input[type="text"]:focus {
             border-color: var(--accent-color);
             background-color: #fff;
         }
@@ -222,7 +222,7 @@
                 <!-- COL 1: THEME SELECTION -->
                 <div style="display: flex; flex-direction: column; gap: 15px;">
                     <div>
-                        <label for="themeSelector">1. Select Style</label>
+                        <label for="themeSelector">Select Style</label>
                         <select id="themeSelector">
                             <option value="simple.css">Simple (Academic/Blog)</option>
                             <option value="grey.css">Grey (Classless Academic)</option>
@@ -263,7 +263,7 @@
 
                 <!-- COL 2: DUAL ACCENTS -->
                 <div>
-                    <label for="accent1">2. Accent 1 (Structure)</label>
+                    <label for="accent1">Accent 1 (Structure)</label>
                     <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px; line-height: 1.4;">
                         Links, headers, and navigation.
                     </p>
@@ -274,7 +274,7 @@
                         ⚠️ Contrast too low for text!
                     </div>
 
-                    <label for="accent2">3. Accent 2 (Highlight)</label>
+                    <label for="accent2">Accent 2 (Highlight)</label>
                     <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px; line-height: 1.4;">
                         Data, code, and emphasis.
                     </p>
@@ -285,7 +285,7 @@
 
                 <!-- COL 3: CONTENT UPLOAD -->
                 <div>
-                    <label for="uploadInput">4. Upload Content</label>
+                    <label for="uploadInput">Upload Content</label>
                     <div style="height: 100%; display: flex; flex-direction: column;">
                         <input type="file" id="uploadInput" accept=".docx, .md, .markdown" style="height: 100px; padding-top: 35px;" />
                         <p class="subtext">Supports Microsoft Word (.docx) or Markdown (.md).</p>
