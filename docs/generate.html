@@ -587,6 +587,9 @@ ${scope} {
     --link: var(--acc1);
 }
 
+/* --- BASE THEME CSS --- */
+${scopedBaseTheme}
+
 /* --- ACCENT 1: STRUCTURE & INTERACTION --- */
 ${scope} a, ${scope} a:visited { color: var(--acc1); }
 ${scope} button, ${scope} input[type="submit"] { 
@@ -617,9 +620,6 @@ ${scope} mark {
 }
 ${scope} li::marker { color: var(--acc2); }
 ${scope} hr { border-top: 2px solid rgba(var(--acc2-rgb), 0.3); }
-
-/* --- BASE THEME CSS --- */
-${scopedBaseTheme}
 </style>
 `;
             container.className = cleanScope;

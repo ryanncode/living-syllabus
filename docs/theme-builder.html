@@ -636,7 +636,9 @@ ${scope} hr { border-top: 2px solid rgba(var(--acc2-rgb), 0.3); }
                 });
 
                 // 6. FINAL ASSEMBLY & OUTPUT
-                const finalCSS = rootOverride + scopedCSS;
+                // We append the overrides AFTER the base theme to ensure our specific
+                // accent styles win the cascade war (CSS Specificity).
+                const finalCSS = scopedCSS + "\n\n" + rootOverride;
                 outputArea.value = finalCSS;
                 updatePreview(finalCSS, scope);
 
