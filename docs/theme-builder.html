@@ -608,21 +608,21 @@ ${scope} blockquote {
 
 /* --- ACCENT 2: THE CONTENT VOICE (Data & Highlights) --- */
 /* Used for evidence, examples, and emphasis. */
-/* Note: We use RGBA tints to ensure readability regardless of the color chosen. */
+/* Note: We use !important to ensure these overrides win against specific selectors in the base theme. */
 ${scope} code, ${scope} pre, ${scope} samp { 
-    background-color: rgba(var(--acc2-rgb), 0.15); 
+    background-color: rgba(var(--acc2-rgb), 0.15) !important; 
     color: inherit; /* Inherit text color to prevent contrast issues in dark mode */
 }
 ${scope} th { 
-    background-color: rgba(var(--acc2-rgb), 0.1); 
-    border-bottom: 2px solid var(--acc2); 
+    background-color: rgba(var(--acc2-rgb), 0.1) !important; 
+    border-bottom: 2px solid var(--acc2) !important; 
 }
 ${scope} mark { 
-    background-color: rgba(var(--acc2-rgb), 0.3); 
+    background-color: rgba(var(--acc2-rgb), 0.3) !important; 
     color: inherit; 
 }
-${scope} li::marker { color: var(--acc2); } /* Custom bullet points */
-${scope} hr { border-top: 2px solid rgba(var(--acc2-rgb), 0.3); }
+${scope} li::marker { color: var(--acc2) !important; } /* Custom bullet points */
+${scope} hr { border-top: 2px solid rgba(var(--acc2-rgb), 0.3) !important; }
 `;
 
                 // 5. CLIENT-SIDE SCOPING (Regex Prefixing)
