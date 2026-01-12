@@ -202,3 +202,10 @@ This design document outlines a complete workflow for generating "Syllabus as Co
 * **Run the Agent:** Use **Module 5** as your prompt guide. Instruct the AI to act as a "Co-Intelligence" partner.
 * **Generate Components:** Ask the AI to generate specific widgets (Callouts, Tables) using the "Micro-Component" strategy (Atomic Tailwind).
 * **Compile & Publish:** Run your build script to fuse the Markdown content, AI widgets, and Global Theme into a single HTML fragment. Paste this result into the Canvas HTML editor.
+
+---
+
+## License
+
+* The software and code samples (scripts, HTML, CSS) are available under the **MIT License**.
+* The syllabus content, essays, and documentation text are available under the **Creative Commons Attribution 4.0 International License (CC BY 4.0)**.
