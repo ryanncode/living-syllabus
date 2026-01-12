@@ -329,17 +329,6 @@
     </div>
 
     <script>
-        /* 
-           ==========================================================================
-           GENERATOR LOGIC
-           ==========================================================================
-           This script handles the core "Content Transformation" workflow:
-           1. It accepts raw files (.docx or .md).
-           2. It converts them to clean HTML.
-           3. It wraps them in a "Theme" (CSS) for instant styling.
-           4. It packages the result for easy copying into Canvas/LMS.
-        */
-
         // Use relative paths to local themes folder to avoid CORS issues
         function getThemeUrl(filename) {
             return "./themes/" + filename;
@@ -355,12 +344,8 @@
             return `${r}, ${g}, ${b}`;
         }
 
-        /* 
-           --- ACCESSIBILITY CHECKS ---
-           We calculate the relative luminance of the chosen "Structure" color 
-           to ensure it has enough contrast against a white background.
-           Formula: https://www.w3.org/TR/WCAG20/#relativeluminancedef
-        */
+        // Calculate relative luminance for contrast checking
+        // Formula: https://www.w3.org/TR/WCAG20/#relativeluminancedef
         function getLuminance(r, g, b) {
             var a = [r, g, b].map(function (v) {
                 v /= 255;
@@ -386,12 +371,7 @@
             }
         }
 
-        /* 
-           --- UI SYNCHRONIZATION ---
-           Keeps the Color Picker (Input type="color") and the Hex Text Box (Input type="text") in sync.
-           Also triggers the accessibility check whenever Accent 1 changes.
-           Triggers applyTheme() to update the preview immediately.
-        */
+        // Sync Color Picker and Hex Input fields
         ['accent1', 'accent2'].forEach(id => {
             const colorInput = document.getElementById(id);
             const hexInput = document.getElementById(id + 'Hex');
@@ -417,11 +397,7 @@
         let customCssContent = null;
         let customCssFilename = null;
 
-        /* 
-           --- CUSTOM THEME UPLOAD ---
-           Allows users to override the preset themes with their own CSS file.
-           This is useful for institutions with strict branding guidelines.
-        */
+        // Handle custom theme upload
         document.getElementById('customThemeInput').addEventListener('change', function(event) {
             const file = event.target.files[0];
             const displayDiv = document.getElementById('customFileDisplay');
@@ -459,12 +435,7 @@
             if(lastRawHTML) applyTheme(lastRawHTML);
         });
 
-        /* 
-           --- FILE PROCESSING ---
-           Handles the file upload event.
-           - Uses Mammoth.js for .docx conversion (preserves basic formatting).
-           - Uses Marked.js for .md conversion (standard markdown parsing).
-        */
+        // Handle file upload and conversion (Mammoth for .docx, Marked for .md)
         document.getElementById('uploadInput').addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -496,12 +467,6 @@
             }
         });
 
-        /* 
-           ==========================================================================
-           CORE APPLICATION LOGIC
-           ==========================================================================
-           Combines the converted HTML content with the selected CSS theme.
-        */
         async function applyTheme(htmlContent) {
             const themeFilename = document.getElementById('themeSelector').value;
             const previewEl = document.getElementById('preview');
@@ -545,11 +510,14 @@
                 cssContent = "/* Theme file not found. Content generated without specific styling. */";
             }
 
-            // [NEW] LICENSE EXTRACTION -----------------------------------------
-            // Look for comments starting with /*! (Standard for "Do Not Remove")
-            const licenseMatch = cssContent.match(/\/\*![\s\S]*?\*\//);
-            const licenseHeader = licenseMatch ? licenseMatch[0] : ``;
-            // ------------------------------------------------------------------
+            // License Extraction
+            const licenseMatch = cssContent.match(/\/\*[\s\S]*?(?:Theme|Copyright|License)[\s\S]*?\*\//i);
+            let licenseHeader = ``;
+            
+            if (licenseMatch) {
+                const cleanText = licenseMatch[0].replace(/\/\*!?/, '').replace(/\*\//, '').trim();
+                licenseHeader = `<!-- ${cleanText} -->`;
+            }
 
             // Wrapper construction
             const wrapper = document.createElement('div');
@@ -559,12 +527,6 @@
             container.setAttribute('style', "max-width: 800px; margin: 0 auto;");
             
             // Scoped CSS Construction
-            // We inline the CSS directly into the HTML block.
-            // This ensures that when the user pastes into Canvas, the styles go with it.
-            // We also inject the Variable Overrides for the Dual Accent system.
-
-            // 1. Scope the Base Theme CSS to prevent leaks
-            // We use the same regex logic as theme-builder.html
             const scopedBaseTheme = cssContent.replace(/([^\r\n,{}]+)(,(?=[^}]*{)|\s*{)/g, (match, selector, separator) => {
                 selector = selector.trim();
                 // Ignore @media, keyframes, html, :root
@@ -634,7 +596,6 @@ ${scope} hr { border-top: 2px solid rgba(var(--acc2-rgb), 0.3); }
             container.innerHTML = wrapper.innerHTML;
             
             // Shadow DOM for isolation in Preview
-            // We use Shadow DOM here so the "Preview" doesn't inherit styles from the Generator tool itself.
             previewEl.innerHTML = "";
             if (!previewEl.shadowRoot) {
                 previewEl.attachShadow({mode: 'open'});
@@ -646,8 +607,6 @@ ${scope} hr { border-top: 2px solid rgba(var(--acc2-rgb), 0.3); }
                 </div>
             `;
             
-            // Final Output Generation
-            // This is the string that gets copied to the clipboard.
             const stamp = `<!-- Generated by Living Syllabus on ${new Date().toISOString()} -->\n\n${licenseHeader}\n\n`;
             generatedHTML = `${stamp}\n${scopedStyle}\n<div class="${cleanScope}">\n${wrapper.innerHTML}\n</div>`;
         }
