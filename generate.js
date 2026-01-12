@@ -1,13 +1,17 @@
 const fs = require('fs');
+const path = require('path');
 const juice = require('juice');
 const pandoc = require('node-pandoc');
 const postcss = require('postcss');
 const cssVariables = require('postcss-css-variables');
-const path = require('path');
 
-// Usage: node generate.js <input_file> <theme_name>
-// Example (Markdown): node generate.js week1.md academic
-// Example (Word):     node generate.js syllabus.docx midnight
+/**
+ * Usage: node generate.js <input_file> <theme_name>
+ *
+ * Examples:
+ *   Markdown: node generate.js week1.md academic
+ *   Word:     node generate.js syllabus.docx midnight
+ */
 
 const args = process.argv.slice(2);
 
@@ -20,13 +24,13 @@ if (args.length < 2) {
 const inputFile = args[0];
 const themeName = args[1];
 
-// Generate output name: inputfilename_themename.html
+// Construct output filename: inputfilename_themename.html
 const baseName = path.basename(inputFile, path.extname(inputFile));
 const outputFile = `${baseName}_${themeName}.html`;
 
-// Theme Resolution Logic
+// Resolve theme file path (root or ./themes/)
 let cssFile = `${themeName}.css`;
-// Check root first, then themes folder
+
 if (!fs.existsSync(cssFile)) {
     if (fs.existsSync(`./themes/${cssFile}`)) {
          cssFile = `./themes/${cssFile}`;
@@ -36,6 +40,13 @@ if (!fs.existsSync(cssFile)) {
     }
 }
 
+/**
+ * Main function to build the styled HTML component.
+ * 1. Converts input file (MD/Docx) to HTML.
+ * 2. Processes and flattens CSS variables.
+ * 3. Inlines CSS into the HTML.
+ * 4. Saves the result.
+ */
 async function buildComponent() {
     console.log(`\n🏗️  Compiling [${inputFile}] with [${themeName.toUpperCase()}] Theme`);
 
@@ -44,13 +55,13 @@ async function buildComponent() {
         return;
     }
 
-    // 1. DETERMINE FILE TYPE & CONVERTER ARGS
+    // --- Step 1: Determine File Type & Converter Args ---
     const fileExt = path.extname(inputFile).toLowerCase();
     let pandocArgs = '';
 
     if (fileExt === '.md' || fileExt === '.markdown') {
         console.log(`   ...Detected Markdown file. Using Markdown converter...`);
-        // --section-divs adds <section> or <div> wrappers around headers, good for styling
+        // Use 'html5' format, prevent wrapping, and wrap headers in <section> or <div> tags (good for styling)
         pandocArgs = '-f markdown -t html5 --wrap=none --section-divs';
     } else if (fileExt === '.docx') {
         console.log(`   ...Detected Word document. Using Docx converter...`);
@@ -60,16 +71,23 @@ async function buildComponent() {
         return;
     }
 
-    // 2. CSS PRE-PROCESSING (The "Flattening" Step)
+    // --- Step 2: CSS Pre-processing (Flattening) ---
     const rawCss = fs.readFileSync(cssFile, 'utf8');
 
-    // [NEW] LICENSE EXTRACTION -----------------------------------------
-    // Look for comments starting with /*! (Standard for "Do Not Remove")
-    const licenseMatch = rawCss.match(/\/\*![\s\S]*?\*\//);
-    const licenseHeader = licenseMatch ? licenseMatch[0] : ``;
-    // ------------------------------------------------------------------
+    // Step 2a: License Extraction
+    // Extract comments containing "Theme", "Copyright", or "License" to preserve attribution.
+    const licenseMatch = rawCss.match(/\/\*[\s\S]*?(?:Theme|Copyright|License)[\s\S]*?\*\//i);
+
+    let licenseHeader = ``;
+    if (licenseMatch) {
+        // Strip CSS comment markers (/* and */) to get clean text
+        const cleanText = licenseMatch[0].replace(/\/\*!?/, '').replace(/\*\//, '').trim();
+        licenseHeader = `<!-- ${cleanText} -->`;
+    }
     
-    // Sanitization: Replace :host with :root and neutralize complex data URIs
+    // Step 2b: Sanitization
+    // Replace :host with :root for standard CSS compatibility
+    // Remove complex data URIs to prevent large file sizes or rendering issues
     let sanitizedCss = rawCss.replace(/:host/g, ':root');
     sanitizedCss = sanitizedCss.replace(/url\("data:[^"]+"\)/g, 'none');
 
@@ -77,8 +95,9 @@ async function buildComponent() {
     let flatCss = '';
     
     try {
+        // Flatten variables (custom properties) for inline style compatibility
         const result = await postcss([
-            cssVariables({ preserve: false }) 
+            cssVariables({ preserve: false })
         ]).process(sanitizedCss, { from: cssFile, to: undefined });
         flatCss = result.css;
     } catch (err) {
@@ -86,7 +105,7 @@ async function buildComponent() {
         return;
     }
 
-    // 3. PANDOC CONVERSION (The "Compiler" Step)
+    // --- Step 3: Pandoc Conversion (Compiling) ---
     console.log(`   ...Converting Content to HTML...`);
     
     pandoc(inputFile, pandocArgs, (err, htmlContent) => {
@@ -95,24 +114,22 @@ async function buildComponent() {
             return;
         }
 
-        // 4. INJECTION (The "Container" Step)
-        // Wraps content in a generic canvas-component div for scoping
+        // --- Step 4: Container Wrapping ---
         const wrappedHtml = `
             <div class="canvas-component" style="max-width: 800px; margin: 0 auto; font-family: sans-serif;">
                 ${htmlContent}
             </div>
             `;
 
-        // 5. INLINING (The "Chemical Bonding" Step)
-        // Inlines the flattened CSS directly into the HTML style attributes
+        // --- Step 5: Inlining (CSS Application) ---
         const finalHtml = juice.inlineContent(wrappedHtml, flatCss, {
             applyStyleTags: true,
             removeStyleTags: true,
-            preserveMediaQueries: false, 
-            widthElements: ['table', 'td', 'th'] 
+            preserveMediaQueries: false, // Disregard media queries for email/canvas safety
+            widthElements: ['table', 'td', 'th']
         });
 
-        // 6. FORENSIC STAMPING
+        // --- Step 6: Metadata Stamping ---
         const stamp = `<!-- Generated by Living Syllabus on ${new Date().toISOString()} -->\n\n${licenseHeader}\n\n`;
 
         fs.writeFileSync(outputFile, stamp + finalHtml);
