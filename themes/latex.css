@@ -1,4 +1,8 @@
-/* LaTeX CSS (Canvas Safe Edition) */
+/* LaTeX CSS v1.13.0 (Canvas Safe Edition)
+* Copyright (c) 2025 Vincent Dörig
+* Licensed under MIT (https://github.com/vincentdoerig/latex-css/blob/master/LICENSE)
+* Modified for use in restricted Canvas environment with the Living Syllabus application
+*/
 
 /* 1. Typography */
 /* We mimic Computer Modern using standard serifs */

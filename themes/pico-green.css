@@ -1,4 +1,8 @@
-/* Pico Green (Canvas Safe & Adaptive) */
+/* Pico Green v2.1.1 (Canvas Safe Edition)
+* Copyright (c) 2025 Pico
+* Licensed under MIT (https://github.com/picocss/pico/blob/master/LICENSE.md)
+* Modified for use in restricted Canvas environment with the Living Syllabus application
+*/
 
 /* 1. Global Reset & Typography */
 body {

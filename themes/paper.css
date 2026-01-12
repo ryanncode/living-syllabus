@@ -1,4 +1,8 @@
-/* Paper CSS (Canvas Safe Edition) */
+/* Paper CSS v1.9.2 (Canvas Safe Edition)
+* Copyright (c) 2023 Rhyne Vlaservich
+* Licensed under ISC (https://github.com/papercss/papercss/blob/master/LICENSE.md)
+* Modified for use in restricted Canvas environment with the Living Syllabus application
+*/
 
 /* 1. Typography */
 /* We attempt to load the sketchy fonts, but fallback to "Comic Sans" style if blocked */

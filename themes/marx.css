@@ -1,18 +1,47 @@
-/* Marx.css (Canvas Safe Edition) */
+/* Marx.css v4.1.1 (Canvas Safe Edition)
+* Copyright (c) 2025 Matthew Blode
+* Licensed under MIT (https://github.com/mblode/marx/blob/master/LICENSE.md)
+* Modified for use in restricted Canvas environment with the Living Syllabus application
+*/
 
-/* 1. Typography & Layout */
+/* 1. Global Resets & Box Sizing */
+*,
+::before,
+::after {
+  box-sizing: border-box;
+  background-repeat: no-repeat;
+}
+
+::before,
+::after {
+  text-decoration: inherit;
+  vertical-align: inherit;
+}
+
+:root {
+  cursor: default;
+  line-height: 1.5;
+  overflow-wrap: break-word;
+  -moz-tab-size: 4;
+  tab-size: 4;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* 2. Typography & Layout */
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   font-size: 1rem;
   line-height: 1.5;
-  color: rgba(0, 0, 0, 0.8);
+  color: rgba(0, 0, 0, 0.8); /* --text */
   background-color: transparent;
-  max-width: 768px; /* The Marx Container Width */
+  max-width: 768px; /* --lg-breakpoint */
   margin: 0 auto;
   padding: 1rem;
 }
 
-/* 2. Headings */
+/* 3. Headings */
 h1, h2, h3, h4, h5, h6 {
   font-weight: 500;
   line-height: 1.2;
@@ -28,98 +57,195 @@ h4 { font-size: 1.5rem; }
 h5 { font-size: 1.25rem; }
 h6 { font-size: 1rem; }
 
-/* 3. Links (Marx Blue) */
+/* 4. Links */
 a {
-  color: #3b82f6; /* Marx Primary Blue */
+  color: #3b82f6; /* --primary */
   text-decoration: none;
+  background-color: transparent;
 }
 
-a:hover {
-  color: #2563eb; /* Darker Blue */
+a:hover,
+a:focus {
+  color: #2563eb; /* --primary-600 */
   text-decoration: underline;
 }
 
-/* 4. Block Elements */
+/* 5. Block Elements */
 p {
+  margin: 0;
   margin-bottom: 1rem;
 }
 
 hr {
   border: 0;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-top: 1px solid rgba(0, 0, 0, 0.12); /* --dividers */
+  display: block;
   margin: 2rem 0;
+  width: 100%;
+  box-sizing: content-box;
+  height: 0;
+  overflow: visible;
 }
 
 blockquote {
-  border-left: 4px solid #3b82f6; /* Blue Accent */
+  border-left: 4px solid #3b82f6; /* --primary */
   padding-left: 1rem;
   margin: 1.5rem 0;
+  font-family: Georgia, Times, "Times New Roman", serif; /* --serif */
   font-style: italic;
   color: rgba(0, 0, 0, 0.6);
-  background-color: rgba(127, 127, 127, 0.05); /* Adaptive Grey */
+  background-color: rgba(127, 127, 127, 0.05);
 }
 
-/* 5. Code & Pre */
+/* 6. Code & Pre */
 pre {
-  background-color: rgba(127, 127, 127, 0.05);
+  background-color: rgba(127, 127, 127, 0.05); /* --grey adapted */
+  color: rgba(0, 0, 0, 0.8);
+  display: block;
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-size: 1rem;
+  margin: 1rem 0;
   padding: 1rem;
-  overflow-x: auto;
-  margin-bottom: 1rem;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
   border-radius: 4px;
   border: 1px solid rgba(127, 127, 127, 0.1);
 }
 
 code {
+  color: rgba(0, 0, 0, 0.8);
   font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
   font-size: 0.9em;
+  line-height: inherit;
+  margin: 0;
   padding: 0.2rem 0.4rem;
+  vertical-align: baseline;
+  word-break: break-all;
+  word-wrap: break-word;
   background-color: rgba(127, 127, 127, 0.1);
   border-radius: 4px;
 }
 
-/* 6. Tables */
+/* 7. Tables */
 table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 1.5rem;
-  border-top: 1px solid rgba(127, 127, 127, 0.2);
+  border-top: 1px solid rgba(0, 0, 0, 0.12); /* --dividers */
 }
 
-th {
+caption {
+  padding: 0.5rem 0;
+}
+
+thead th {
+  border: 0;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.12);
   text-align: left;
-  border-bottom: 2px solid rgba(127, 127, 127, 0.2);
-  padding: 0.75rem;
-  font-weight: bold;
 }
 
+tr {
+  margin-bottom: 0.5rem;
+}
+
+th,
 td {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
   padding: 0.75rem;
-  border-bottom: 1px solid rgba(127, 127, 127, 0.2);
-  vertical-align: top;
+  vertical-align: inherit;
 }
 
-/* 7. Forms & Inputs */
+tfoot tr {
+  text-align: left;
+}
+
+tfoot td {
+  color: rgba(0, 0, 0, 0.54); /* --secondary */
+  font-size: 0.8rem;
+  font-style: italic;
+  padding: 1rem 0.25rem;
+}
+
+/* 8. Forms & Inputs */
 input, select, textarea {
   display: block;
   width: 100%;
   padding: 0.5rem;
   font-size: 1rem;
   line-height: 1.5;
-  color: inherit;
+  color: rgba(0, 0, 0, 0.8);
   background-color: transparent;
-  border: 1px solid rgba(127, 127, 127, 0.3);
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: 4px;
   margin-bottom: 1rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  font-family: inherit;
 }
 
-/* 8. Buttons (Marx Red and Blue) */
-button, input[type="submit"], .button {
+input[type="checkbox"],
+input[type="radio"] {
+  display: inline;
+  width: auto;
+  margin-right: 0.5rem;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  background-color: transparent;
+  border-color: #60a5fa; /* --primary-400 */
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.5);
+}
+
+input[disabled],
+select[disabled],
+textarea[disabled] {
+  background-color: rgba(0, 0, 0, 0.12);
+  color: rgba(0, 0, 0, 0.54);
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+label {
+  display: inline-block;
+  line-height: 2;
+}
+
+fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0.5rem 0;
+}
+
+legend {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  color: rgba(0, 0, 0, 0.8);
+  display: block;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem 0;
+  width: 100%;
+}
+
+textarea {
+  overflow: auto;
+  resize: vertical;
+}
+
+/* 9. Buttons */
+button,
+input[type="submit"],
+input[type="reset"],
+input[type="button"],
+.button {
   display: inline-block;
   font-weight: 400;
   text-align: center;
+  white-space: nowrap;
   vertical-align: middle;
   cursor: pointer;
-  background-color: #3b82f6; /* Primary Blue */
+  background-color: #3b82f6; /* --primary */
   border: 1px solid #3b82f6;
   color: white !important;
   padding: 0.375rem 0.75rem;
@@ -127,23 +253,39 @@ button, input[type="submit"], .button {
   line-height: 1.5;
   border-radius: 4px;
   transition: background-color 0.15s ease-in-out;
+  user-select: none;
 }
 
-button:hover, input[type="submit"]:hover {
-  background-color: #2563eb;
+button:hover,
+input[type="submit"]:hover,
+input[type="reset"]:hover,
+input[type="button"]:hover,
+.button:hover {
+  background-color: #2563eb; /* --primary-600 */
+  border-color: #2563eb;
+  color: white !important;
 }
 
-/* Danger Button Variant (if needed via inline style override) */
-.button-danger {
-  background-color: #f43f5e; /* Marx Red */
-  border-color: #f43f5e;
+button:disabled,
+input[type="submit"]:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  background-color: #3b82f6;
+  border-color: #3b82f6;
 }
 
-/* 9. Images */
+/* 10. Images & Media */
+img, svg, video, canvas, audio, iframe, embed {
+  vertical-align: middle;
+}
+
 img {
   max-width: 100%;
   height: auto;
-  vertical-align: middle;
+}
+
+iframe {
+  border: 0;
 }
 
 figure {
@@ -152,7 +294,60 @@ figure {
 
 figcaption {
   font-size: 0.9em;
-  color: rgba(127, 127, 127, 0.6);
+  color: rgba(0, 0, 0, 0.54);
   text-align: center;
   margin-top: 0.5rem;
+}
+
+/* 11. Interactive & New Elements (v4.1.1) */
+dialog {
+  background-color: white;
+  border: solid;
+  color: black;
+  height: fit-content;
+  left: 0;
+  margin: auto;
+  padding: 1em;
+  position: absolute;
+  right: 0;
+  width: fit-content;
+}
+
+dialog:not([open]) {
+  display: none;
+}
+
+details > summary:first-of-type {
+  display: list-item;
+  cursor: pointer;
+  margin-bottom: 0.5rem;
+}
+
+details {
+  margin-bottom: 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+
+progress {
+  vertical-align: baseline;
+}
+
+/* 12. Accessibility */
+[aria-busy="true"] {
+  cursor: progress;
+}
+
+[aria-disabled="true"], [disabled] {
+  cursor: not-allowed;
+}
+
+[aria-hidden="false"][hidden] {
+  display: initial;
+}
+
+[aria-hidden="false"][hidden]:not(:focus) {
+  clip: rect(0, 0, 0, 0);
+  position: absolute;
 }

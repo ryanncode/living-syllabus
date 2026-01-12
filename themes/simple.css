@@ -1,4 +1,8 @@
-/* Simple CSS (Canvas Safe Edition) */
+/* Simple CSS v2.3.7 (Canvas Safe Edition)
+* Copyright (c) 2025 Kev Quirk
+* Licensed under MIT (https://github.com/kevquirk/simple.css/blob/master/LICENSE)
+* Modified for use in restricted Canvas environment with the Living Syllabus application
+*/
 
 /* 1. Typography & Global Reset */
 body {

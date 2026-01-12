@@ -1,4 +1,8 @@
-/* Water Theme (Adaptive Transparency Edition) */
+/* Water Theme (Canvas Safe Edition)
+* Copyright (c) 2021 Kognise
+* Licensed under MIT (https://github.com/kognise/water.css/blob/master/LICENSE.md)
+* Modified for use in restricted Canvas environment with the Living Syllabus application
+*/
 
 /* 1. Reset & Inheritance */
 /* We remove specific color/background declarations to let Canvas control defaults */

@@ -1,4 +1,8 @@
-/* Tacit CSS (Canvas Safe Edition) */
+/* Tacit CSS v1.9.5 (Canvas Safe Edition)
+* Copyright (c) 2025 Yegor Bugayenko
+* Licensed under MIT (https://github.com/yegor256/tacit/blob/master/LICENSE.txt)
+* Modified for use in restricted Canvas environment with the Living Syllabus application
+*/
 
 /* 1. Typography & Global Reset */
 body {

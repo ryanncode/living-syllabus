@@ -1,4 +1,8 @@
-/* Tufte CSS (Canvas Safe Edition) */
+/* Tufte CSS (Canvas Safe Edition)
+* Copyright (c) 2024 Dave Liepmann
+* Licensed under MIT (https://github.com/edwardtufte/tufte-css/blob/master/LICENSE)
+* Modified for use in restricted Canvas environment with the Living Syllabus application
+*/
 
 /* 1. Typography */
 /* We fallback to Georgia/Palatino to mimic 'ET Book' without external font files */
