@@ -103,7 +103,7 @@ node generate.js assignment1.docx academic
 
 As you build out an entire course, running commands manually for every file can become tedious. We recommend the **Batch Builder** method as the primary workflow, allowing you to compile your entire course with a single word.
 
-### Option 1: The "Batch Builder" (Makefile)
+### Option 3.1: The "Batch Builder" (Makefile)
 
 *Recommended for most users.*
 
@@ -127,13 +127,13 @@ You are free to create new subfolders or add files anywhere in the `/content` di
 
 You can edit the `Makefile` text file directly to change which themes are assigned to which folders.
 
-### Option 2: The "Watcher" (Live Preview)
+### Option 3.2: The "Watcher" (Live Preview)
 
 *Advanced setup for power users.*
 
 This method monitors your files while you work. Whenever you save a file in VS Code, it will instantly trigger the generator. This creates a "live code" experience but requires keeping a terminal window open.
 
-**1. Update your `package.json`**
+**3.2.1. Update your `package.json`**
 Add these lines to the `scripts` section of your `package.json` file.
 
 ```json
@@ -145,7 +145,7 @@ Add these lines to the `scripts` section of your `package.json` file.
 }
 ```
 
-**2. How to use it**
+**3.2.2. How to use it**
 Run this command in your terminal:
 
 ```bash
@@ -153,10 +153,10 @@ npm run watch
 ```
 
 **Result:**
-1. You edit `syllabus.md`.
-2. You press **Ctrl+S**.
-3. The terminal instantly flashes: `Compiling [syllabus.md] with [ACADEMIC] Theme...`
-4. `syllabus_academic.html` is updated automatically.
+* You edit `syllabus.md`.
+* You press **Ctrl+S**.
+* The terminal instantly flashes: `Compiling [syllabus.md] with [ACADEMIC] Theme...`
+* `syllabus_academic.html` is updated automatically.
 
 ---
 
@@ -186,22 +186,22 @@ To ensure your Word document survives the conversion to "Canvas-Ready" code, you
 
 ## Appendix: Theoretical Framework
 
-*Once you are comfortable with the workflow, explore these modules to understand the "Why" and "How" of the system.*
+*Once you are comfortable with the workflow, explore these advanced methods to understand the "Why" and "How" of the system.*
 
 This design document outlines a complete workflow for generating "Syllabus as Code" components. Follow these steps to build resilient, accessible, and aesthetically modern course materials for Canvas.
 
 **Phase 4: Configuration (The "Why")**
-* **Define Your Philosophy:** Review **Module 1**. Decide on your archival strategy (Markdown source) and pedagogical stance (Emancipation/Generosity). This sets the "ethical baseline" for your content.
-* **Select Your Constraints:** Review **Module 2** and **Module 3**. Choose your critical lenses (Forensics, Deformance) and infrastructural limits (Minimal Computing, Flat HTML). These choices determine *what* you build.
+* **Define Your Philosophy:** Decide on your archival strategy (Markdown source) and pedagogical stance (Emancipation/Generosity). This sets the "ethical baseline" for your content.
+* **Select Your Constraints:** Choose your critical lenses (Forensics, Deformance) and infrastructural limits (Minimal Computing, Flat HTML). These choices determine *what* you build.
 
 **Phase 5: Engineering (The "Where")**
-* **Prepare the Environment:** Review **Module 4**. Understand the "Walled Garden" of Canvas. Set up your `themes/` folder with Classless CSS libraries (Pico, Simple) and ensure your `generate.js` script is ready for the "Pandoc/Juice" pipeline.
+* **Prepare the Environment:** Understand the "Walled Garden" of Canvas. Set up your `themes/` folder with Classless CSS libraries (Pico, Simple) and ensure your `generate.js` script is ready for the "Pandoc/Juice" pipeline.
 * **Choose Your Aesthetic:** Select a "Typographic Pairing" (e.g., Ivy League vs. Modern SaaS) and a "Safe Color Palette" for your components.
 
 **Phase 6: Generation (The "How")**
-* **Run the Agent:** Use **Module 5** as your prompt guide. Instruct the AI to act as a "Co-Intelligence" partner.
-* **Generate Components:** Ask the AI to generate specific widgets (Callouts, Tables) using the "Micro-Component" strategy (Atomic Tailwind).
-* **Compile & Publish:** Run your build script to fuse the Markdown content, AI widgets, and Global Theme into a single HTML fragment. Paste this result into the Canvas HTML editor.
+* **Run the Agent:** Use the `component-blueprints.md` file as a context prompt to instruct the AI to act as a "Co-Intelligence" partner.
+* **Generate Components:** Refer to the **[Syllabus Component Design](https://thing.rodeo/syllabus-component-design/)** guide to generate specific widgets (Callouts, Tables) using the "Micro-Component" strategy.
+* **Compile & Publish:** Utilize the **[Syllabus Theme Builder](https://thing.rodeo/syllabus-theme-builder/)** to finalize your aesthetic, then run your build script to fuse the Markdown content and Global Theme into a single HTML fragment. Paste this result into the Canvas HTML editor.
 
 ---
 
