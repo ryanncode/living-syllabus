@@ -6,23 +6,42 @@ const postcss = require('postcss');
 const cssVariables = require('postcss-css-variables');
 
 /**
- * Usage: node generate.js <input_file> <theme_name>
+ * Usage: node generate.js <input_file> <theme_name> [scope_class]
  *
  * Examples:
  *   Markdown: node generate.js week1.md academic
- *   Word:     node generate.js syllabus.docx midnight
+ *   Word:     node generate.js syllabus.docx midnight my-custom-scope
  */
 
 const args = process.argv.slice(2);
 
+// Check for help command
+if (args.includes('--help') || args.includes('-h')) {
+    console.log(`
+Usage: node generate.js <input_file> <theme_name> [scope_class]
+
+Arguments:
+  input_file    Path to .md or .docx file
+  theme_name    Name of the theme (e.g., 'simple', 'academic')
+  scope_class   Optional CSS scope class (default: 'living-syllabus')
+
+Examples:
+  node generate.js syllabus.md simple
+  node generate.js week1.docx academic my-custom-scope
+    `);
+    process.exit(0);
+}
+
 if (args.length < 2) {
     console.error("❌ Error: Please provide both an input file and a theme.");
-    console.error("   Usage: node generate.js <file.md|file.docx> <theme>");
+    console.error("   Usage: node generate.js <file.md|file.docx> <theme> [scope_class]");
     process.exit(1);
 }
 
 const inputFile = args[0];
 const themeName = args[1];
+// Remove leading dot if user provided it (e.g. .my-scope -> my-scope)
+const scopeClass = (args[2] || 'living-syllabus').replace(/^\./, '');
 
 // Construct output filename: inputfilename_themename.html
 const baseName = path.basename(inputFile, path.extname(inputFile));
@@ -48,7 +67,7 @@ if (!fs.existsSync(cssFile)) {
  * 4. Saves the result.
  */
 async function buildComponent() {
-    console.log(`\n🏗️  Compiling [${inputFile}] with [${themeName.toUpperCase()}] Theme`);
+    console.log(`\n🏗️  Compiling [${inputFile}] with [${themeName.toUpperCase()}] Theme (Scope: .${scopeClass})`);
 
     if (!fs.existsSync(inputFile)) {
         console.error(`❌ Error: Source file '${inputFile}' not found.`);
@@ -116,7 +135,7 @@ async function buildComponent() {
 
         // --- Step 4: Container Wrapping ---
         const wrappedHtml = `
-            <div class="canvas-component" style="max-width: 800px; margin: 0 auto; font-family: sans-serif;">
+            <div class="${scopeClass}" style="max-width: 800px; margin: 0 auto; font-family: sans-serif;">
                 ${htmlContent}
             </div>
             `;

@@ -74,19 +74,20 @@ Once your setup is complete, you will repeat these two steps every time you upda
 ### 2.1. The Generation (Compile)
 
 * Open your terminal in VS Code.
-* Run the command structure: `node generate.js <filename> <theme>`
+* Run the command structure: `node generate.js <filename> <theme> [scope_class]`
+* View help instructions: `node generate.js --help`
 
 **Examples:**
 
 ```bash
-# To generate your syllabus with the Modern theme:
+# To generate your syllabus with the Modern theme (default scope):
 node generate.js syllabus.md modern
 
-# To generate a Word doc assignment with the Academic theme:
-node generate.js assignment1.docx academic
+# To generate a Word doc assignment with the Academic theme and custom scope:
+node generate.js assignment1.docx academic my-custom-scope
 ```
 
-* *What just happened?* The tool took your input file, applied the chosen theme (cleaning up any CSS variables), and created a new file called `syllabus_modern.html` (or `assignment1_academic.html`).
+* *What just happened?* The tool took your input file, applied the chosen theme (cleaning up any CSS variables), and created a new file called `syllabus_modern.html` (or `assignment1_academic.html`). By default, it uses the `.living-syllabus` class to scope styles, ensuring they don't break the rest of the Canvas page.
 
 ### 2.2. The Publication (Paste)
 * Open the newly created HTML file in VS Code.

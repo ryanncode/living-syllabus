@@ -600,30 +600,31 @@ ${scope} {
 
 /* --- ACCENT 1: THE AUTHORITY VOICE (Structure & Interaction) --- */
 /* Used for navigation, requirements, and calls to action */
-${scope} a, ${scope} a:visited { color: var(--acc1); }
-${scope} button, ${scope} input[type="submit"] { 
-    background-color: var(--acc1) !important; color: #fff !important; 
+${scope} a, ${scope} a:visited { color: var(--acc1) !important; }
+${scope} button, ${scope} input[type="submit"] {
+    background-color: var(--acc1) !important; color: #fff !important;
     border: 1px solid var(--acc1) !important;
 }
-${scope} summary { color: var(--acc1); font-weight: bold; } /* Accordion triggers */
-${scope} h1, ${scope} h2, ${scope} h3 { 
-    border-bottom: 2px solid rgba(var(--acc1-rgb), 0.15); /* Subtle structural divider */
+${scope} summary { color: var(--acc1) !important; font-weight: bold; } /* Accordion triggers */
+${scope} h1, ${scope} h2, ${scope} h3 {
+    border-bottom: 2px solid rgba(var(--acc1-rgb), 0.15) !important; /* Subtle structural divider */
+    color: inherit;
 }
-${scope} blockquote { 
-    border-left: 4px solid var(--acc1); /* Strong vertical anchor */
-    background: rgba(var(--acc1-rgb), 0.05);
+${scope} blockquote {
+    border-left: 4px solid var(--acc1) !important; /* Strong vertical anchor */
+    background: rgba(var(--acc1-rgb), 0.05) !important;
 }
 
 /* --- ACCENT 2: THE CONTENT VOICE (Data & Highlights) --- */
 /* Used for evidence, examples, and emphasis. */
 /* Note: We use !important to ensure these overrides win against specific selectors in the base theme. */
-${scope} code, ${scope} pre, ${scope} samp { 
-    background-color: rgba(var(--acc2-rgb), 0.15) !important; 
+${scope} code, ${scope} pre, ${scope} samp {
+    background-color: rgba(var(--acc2-rgb), 0.15) !important;
     color: inherit; /* Inherit text color to prevent contrast issues in dark mode */
 }
-${scope} th { 
-    background-color: rgba(var(--acc2-rgb), 0.1) !important; 
-    border-bottom: 2px solid var(--acc2) !important; 
+${scope} th {
+    background-color: rgba(var(--acc2-rgb), 0.1) !important;
+    border-bottom: 2px solid var(--acc2) !important;
 }
 ${scope} mark { 
     background-color: rgba(var(--acc2-rgb), 0.3) !important; 
