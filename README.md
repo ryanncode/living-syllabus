@@ -171,17 +171,17 @@ The `generate.js` engine now natively supports `.docx` files. However, it is not
 
 To ensure your Word document survives the conversion to "Canvas-Ready" code, you must treat Word as a **Structural Editor**, not a visual one.
 
-1. **The "Styles Pane" Mandate:**
-   * **Do Not:** Select text and make it **Bold** + Size 18 to create a header.
-   * **Do:** You **MUST** use the official **Heading 1**, **Heading 2**, and **Heading 3** buttons. These translate directly to the HTML tags that drive the theme engine.
+* **The "Styles Pane" Mandate:**
+    * **Do Not:** Select text and make it **Bold** + Size 18 to create a header.
+    * **Do:** You **MUST** use the official **Heading 1**, **Heading 2**, and **Heading 3** buttons. These translate directly to the HTML tags that drive the theme engine.
 
-2. **No "Floating" Elements:**
-   * **Do Not:** Use "Text Boxes," "SmartArt," or "Shape" overlays. These will be deleted.
-   * **Do:** Type everything in the main body of the page.
+* **No "Floating" Elements:**
+    * **Do Not:** Use "Text Boxes," "SmartArt," or "Shape" overlays. These will be deleted.
+    * **Do:** Type everything in the main body of the page.
 
-3. **Table Discipline:**
-   * **Do Not:** Use merged cells or complex nested tables.
-   * **Do:** Use simple grid tables for data (Rows and Columns only).
+* **Table Discipline:**
+    * **Do Not:** Use merged cells or complex nested tables.
+    * **Do:** Use simple grid tables for data (Rows and Columns only).
 
 ---
 

@@ -81,7 +81,8 @@ async function buildComponent() {
     if (fileExt === '.md' || fileExt === '.markdown') {
         console.log(`   ...Detected Markdown file. Using Markdown converter...`);
         // Use 'html5' format, prevent wrapping, and wrap headers in <section> or <div> tags (good for styling)
-        pandocArgs = '-f markdown -t html5 --wrap=none --section-divs';
+        // Switch to 'gfm' (GitHub Flavored Markdown) to better handle lists without preceding blank lines
+        pandocArgs = '-f gfm -t html5 --wrap=none --section-divs';
     } else if (fileExt === '.docx') {
         console.log(`   ...Detected Word document. Using Docx converter...`);
         pandocArgs = '-f docx -t html5 --wrap=none --section-divs';

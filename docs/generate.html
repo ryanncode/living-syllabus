@@ -458,7 +458,7 @@
             } else if (extension === 'md' || extension === 'markdown') {
                 reader.onload = function(loadEvent) {
                     const text = loadEvent.target.result;
-                    lastRawHTML = marked.parse(text);
+                    lastRawHTML = marked.parse(text, { gfm: true, breaks: false });
                     applyTheme(lastRawHTML);
                 };
                 reader.readAsText(file);
