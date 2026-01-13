@@ -226,13 +226,6 @@
     </div>
 
     <div class="gh-inner">
-        <!-- 
-           ==========================================================================
-           UI HEADER: CONFIGURATION PANEL
-           ==========================================================================
-           This section contains all the user inputs required to generate the theme.
-           We group these into logical steps (1, 2, 3) to guide the non-coder user.
-        -->
         <div class="gh-card">
             <div class="gh-card-header">
                 <h2 class="gh-card-title">Configuration</h2>
@@ -316,11 +309,6 @@
             </div>
         </div>
 
-        <!-- 
-           ==========================================================================
-           UI OUTPUT: PREVIEW & CODE
-           ==========================================================================
-        -->
         <div class="gh-card">
             <div class="gh-card-header">
                 <h2 class="gh-card-title">Output & Preview</h2>
@@ -418,16 +406,6 @@ if think():
     </div>
 
     <script>
-        /* 
-           ==========================================================================
-           THEME BUILDER LOGIC
-           ==========================================================================
-           This script handles the core "Semantic Safety" architecture:
-           1. It takes a "Base Theme" (clean layout).
-           2. It injects "Dual Accent" logic (Brand vs. Content colors).
-           3. It "Scopes" the CSS so it doesn't break the LMS (Canvas/Blackboard).
-        */
-
         // Use relative paths to local themes folder to avoid CORS issues
         function getThemeUrl(filename) {
             return "./themes/" + filename;
@@ -444,12 +422,8 @@ if think():
             return `${r}, ${g}, ${b}`;
         }
 
-        /* 
-           --- ACCESSIBILITY CHECKS ---
-           We calculate the relative luminance of the chosen "Structure" color 
-           to ensure it has enough contrast against a white background.
-           Formula: https://www.w3.org/TR/WCAG20/#relativeluminancedef
-        */
+        // Calculate relative luminance for contrast checking
+        // Formula: https://www.w3.org/TR/WCAG20/#relativeluminancedef
         function getLuminance(r, g, b) {
             var a = [r, g, b].map(function (v) {
                 v /= 255;
@@ -477,11 +451,7 @@ if think():
             }
         }
 
-        /* 
-           --- UI SYNCHRONIZATION ---
-           Keeps the Color Picker (Input type="color") and the Hex Text Box (Input type="text") in sync.
-           Also triggers the accessibility check whenever Accent 1 changes.
-        */
+        // Sync Color Picker and Hex Input fields
         ['accent1', 'accent2'].forEach(id => {
             const colorInput = document.getElementById(id);
             const hexInput = document.getElementById(id + 'Hex');
@@ -501,11 +471,7 @@ if think():
             });
         });
 
-        /* 
-           --- CUSTOM CSS UPLOAD ---
-           Allows advanced users to bypass our presets and upload their own .css file.
-           The builder will still apply scoping and accent variable injection to this file.
-        */
+        // Handle custom CSS upload
         let customCssContent = null;
         let customCssFilename = null;
 
@@ -534,31 +500,22 @@ if think():
             document.getElementById('customFileDisplay').style.display = 'none';
         });
 
-        /* 
-           ==========================================================================
-           CORE BUILD FUNCTION
-           ==========================================================================
-        */
         async function buildTheme() {
-            // 1. INPUT COLLECTION
-            // Gather user selections from the DOM
+            // Gather user selections
             const themeFilename = document.getElementById('baseTheme').value;
             const acc1 = document.getElementById('accent1').value; // Primary (Structure)
             const acc2 = document.getElementById('accent2').value; // Secondary (Highlight)
             const scope = document.getElementById('scopeClass').value;
             const outputArea = document.getElementById('outputCSS');
 
-            // 2. COLOR PROCESSING
-            // Convert Hex to RGB for use in rgba() functions (transparency)
-            // This allows us to create tints without needing separate color variables
+            // Convert Hex to RGB for transparency/tints
             const acc1Rgb = hexToRgb(acc1);
             const acc2Rgb = hexToRgb(acc2);
 
             outputArea.value = "Fetching and processing...";
 
             try {
-                // 3. FETCH BASE THEME
-                // Load the selected CSS file (or custom upload) as a text string
+                // Fetch base theme CSS
                 let css = "";
                 let activeThemeName = themeFilename;
                 if (customCssContent) {
@@ -571,15 +528,15 @@ if think():
                     css = await response.text();
                 }
 
-                // [NEW] LICENSE EXTRACTION -----------------------------------------
-                // Look for comments starting with /*! (Standard for "Do Not Remove")
-                const licenseMatch = css.match(/\/\*![\s\S]*?\*\//);
-                const licenseHeader = licenseMatch ? licenseMatch[0] : ``;
-                // ------------------------------------------------------------------
+                // License Extraction
+                const licenseMatch = css.match(/\/\*[\s\S]*?(?:Theme|Copyright|License)[\s\S]*?\*\//i);
+                let licenseHeader = ``;
+                
+                if (licenseMatch) {
+                    licenseHeader = licenseMatch[0];
+                }
 
-                // 4. GENERATE DUAL ACCENT SYSTEM
-                // This block injects the "Semantic Safety" logic.
-                // It overrides the base theme's variables and enforces the Structure/Data split.
+                // Generate Dual Accent System (Semantic Safety)
                 const rootOverride = `
 /* LIVING SYLLABUS (${activeThemeName}) */
 ${scope} {
@@ -634,9 +591,7 @@ ${scope} li::marker { color: var(--acc2) !important; } /* Custom bullet points *
 ${scope} hr { border-top: 2px solid rgba(var(--acc2-rgb), 0.3) !important; }
 `;
 
-                // 5. CLIENT-SIDE SCOPING (Regex Prefixing)
-                // This captures every CSS selector and prepends the unique scope class.
-                // This is what prevents the styles from breaking the rest of the LMS page.
+                // Client-side Scoping
                 let scopedCSS = css.replace(/([^\r\n,{}]+)(,(?=[^}]*{)|\s*{)/g, (match, selector, separator) => {
                     selector = selector.trim();
                     if (selector.startsWith('@') || selector.startsWith(':root') || selector === 'html') return match;
@@ -644,9 +599,7 @@ ${scope} hr { border-top: 2px solid rgba(var(--acc2-rgb), 0.3) !important; }
                     return `${scope} ${selector} ${separator}`;
                 });
 
-                // 6. FINAL ASSEMBLY & OUTPUT
-                // We append the overrides AFTER the base theme to ensure our specific
-                // accent styles win the cascade war (CSS Specificity).
+                // Final Assembly & Output
                 const stamp = `/* Generated by Living Syllabus on ${new Date().toISOString()} */\n\n${licenseHeader}`;
                 const finalCSS = stamp + "\n\n" + scopedCSS + "\n\n" + rootOverride;
                 outputArea.value = finalCSS;

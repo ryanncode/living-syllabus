@@ -1,82 +1,68 @@
-/**
- * THE CLASSLESS CSS TRANSFORMER (The Builder)
- * -------------------------------------------
- * Purpose: Takes a standard "Classless" CSS file and makes it LMS-Safe.
- * 1. Scopes all selectors to a wrapper class (so it doesn't break Canvas UI).
- * 2. Injects University Brand colors.
- * 3. Minifies the output.
- */
-
 const fs = require('fs');
 const postcss = require('postcss');
 const prefixer = require('postcss-prefix-selector');
 const cssnano = require('cssnano');
 
-// --- CONFIGURATION -----------------------------------------
 const CONFIG = {
-    // 1. Where is the raw CSS coming from? (Download a file and put it here)
     inputFile: './themes/raw_water.css',
-    
-    // 2. Where should the "Safe" file go?
     outputFile: './themes/safe_water.css',
-
-    // 3. The "Wrapper Class" that protects the LMS
-    // Your HTML must be wrapped in <div class="living-syllabus">...</div>
     scopeClass: '.living-syllabus',
-
-    // 4. University Branding (Variable Overrides)
-    // These replace the :root variables in the CSS file.
     brandColors: {
-        '--background': '#ffffff',         // Force white background
-        '--text-main': '#2d3748',          // Dark Grey text
-        '--primary': '#003366',            // University Blue (Example)
-        '--links': '#cc0000',              // University Red (Example)
-        '--focus': 'rgba(0, 51, 102, 0.3)' // Focus ring color
+        '--background': '#ffffff',
+        '--text-main': '#2d3748',
+        '--primary': '#003366',
+        '--links': '#cc0000',
+        '--focus': 'rgba(0, 51, 102, 0.3)'
     }
 };
-// -----------------------------------------------------------
 
 const processCSS = async () => {
     try {
-        // 1. Read the Raw CSS
         if (!fs.existsSync(CONFIG.inputFile)) {
             throw new Error(`Input file not found: ${CONFIG.inputFile}`);
         }
         let css = fs.readFileSync(CONFIG.inputFile, 'utf8');
 
-        // 2. Inject Brand Colors (Variable Replacement Strategy)
-        // We manually replace the :root definition or specific variable strings.
+        // License Extraction
+        const licenseMatch = css.match(/\/\*[\s\S]*?(?:Theme|Copyright|License)[\s\S]*?\*\//i);
+        let licenseHeader = ``;
+        
+        if (licenseMatch) {
+            // Preserve the license comment as is for the CSS output
+            licenseHeader = licenseMatch[0];
+        }
+
+        // Inject Brand Colors
         console.log('🎨 Injecting Brand Colors...');
         Object.entries(CONFIG.brandColors).forEach(([key, value]) => {
-            // Regex matches the variable definition: --variable: value;
             const regex = new RegExp(`${key}:\\s*[^;]+;`, 'g');
             css = css.replace(regex, `${key}: ${value};`);
         });
 
-        // 3. Scope the CSS (The "Canvas Safety" Step)
-        // This transforms "h1 { color: red }" into ".living-syllabus h1 { color: red }"
+        // Scope the CSS
         console.log(`🛡️  Scoping CSS to "${CONFIG.scopeClass}"...`);
         const result = await postcss()
             .use(prefixer({
                 prefix: CONFIG.scopeClass,
                 transform: function (prefix, selector, prefixedSelector, filePath, rule) {
-                    // Special Case: Handle :root and body tags
                     if (selector === 'body' || selector === 'html') {
-                        return prefix; // vital: turns "body" into ".living-syllabus"
+                        return prefix;
                     }
                     if (selector === ':root') {
-                        return selector; // leave :root alone so variables work globally within scope
+                        return selector;
                     }
                     return prefixedSelector;
                 }
             }))
-            .use(cssnano({ preset: 'default' })) // Minify
+            .use(cssnano({ preset: 'default' }))
             .process(css, { from: CONFIG.inputFile, to: CONFIG.outputFile });
 
-        // 4. Save the Result
-        fs.writeFileSync(CONFIG.outputFile, result.css);
+        // Save the Result with License Header
+        const finalCss = licenseHeader ? `${licenseHeader}\n${result.css}` : result.css;
+        fs.writeFileSync(CONFIG.outputFile, finalCss);
+        
         console.log(`✅ Success! Safe theme saved to: ${CONFIG.outputFile}`);
-        console.log(`   Size: ${(result.css.length / 1024).toFixed(2)} KB`);
+        console.log(`   Size: ${(finalCss.length / 1024).toFixed(2)} KB`);
 
     } catch (err) {
         console.error('❌ Build Failed:', err.message);
