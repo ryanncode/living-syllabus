@@ -24,7 +24,32 @@ The core philosophy is **"Structure over Color."** You must rely on borders, opa
 
 * **Use Opacity for "Grey" text:** If you want sub-text (dates, captions) to look grey, do not use a grey hex code. Use `opacity: 0.7` or `0.8`. This ensures it looks like "Dim Black" in Light Mode and "Dim White" in Dark Mode.
 
-## II. The Container (Page Architecture)
+## II. The Canvas Sanitizer Constraints (Allowed & Blocked)
+
+Canvas employs an aggressive HTML sanitizer that strips out code considered insecure.
+
+### The Allowed List (Safe to Use)
+These tags and attributes consistently survive the sanitization process.
+
+| Category | Allowed Tags | Notes |
+| --- | --- | --- |
+| Structure | `<div>`, `<span>`, `<p>`, `<br>`, `<hr>`, `<h1>` - `<h6>` | The backbone of your content. |
+| Formatting | `<strong>`, `<em>`, `<blockquote>`, `<code>`, `<pre>` | Standard text styling works fine. |
+| Lists | `<ul>`, `<ol>`, `<li>`, `<dl>`, `<dt>`, `<dd>` | Essential for accessibility. |
+| Media | `<img>`, `<audio>`, `<video>`, `<figure>`, `<figcaption>` | Images must be hosted externally or in Canvas Files. |
+| Tables | `<table>`, `<thead>`, `<tbody>`, `<tr>`, `<td>`, `<th>` | Attributes like colspan and rowspan are supported. |
+| Interaction | `<details>`, `<summary>` | **Critical:** This is the only allowed interactive element (accordions). |
+
+### The Blocked List (Will Be Stripped)
+Attempting to use these will result in code deletion or stripping.
+
+* **JavaScript:** `<script>` tags are instantly removed. No interactive quizzes or calculators.
+* **External CSS:** `<link rel="stylesheet">` is blocked. You cannot import Google Fonts or Bootstrap.
+* **Style Blocks:** `<style>...</style>` headers are generally stripped. **Fix:** All CSS must be inlined (`<div style="...">`).
+* **SVG Code:** Raw `<svg>` blocks are often corrupted. **Fix:** Use .svg files as `<img>` sources.
+* **Iframes:** Generally blocked unless the domain is whitelisted by university admin.
+
+## III. The Container (Page Architecture)
 
 All content should be wrapped in a main container to ensure readability on large monitors.
 
@@ -36,7 +61,7 @@ All content should be wrapped in a main container to ensure readability on large
     * **Goal:** Separates major logic blocks (Intro, Main Content, Conclusion).
     * **Code:** `<section style="margin-bottom: 3rem;"> ... </section>`
 
-## III. Typography & Hierarchy
+## IV. Typography & Hierarchy
 
 * **Font Stack:** Always use the "System Stack" (Apple, Segoe, Roboto) rather than importing Google Fonts, which can render slowly or oddly in Canvas apps.
 
@@ -50,7 +75,7 @@ All content should be wrapped in a main container to ensure readability on large
 * **Secondary Text (Metadata/Dates):**
     * *Code:* `<p style="opacity: 0.7; font-size: 1.1rem;">`
 
-## IV. The Component Library
+## V. The Component Library
 
 ### 1. The "Callout" Box (Notification)
 Instead of a boring red text, use a "flex" layout with an emoji icon.
@@ -180,7 +205,15 @@ A clean layout for instructor bio and contact info.
 </div>
 ```
 
-## V. Advanced Layout Strategies
+## VI. Advanced Layout Strategies
+
+### The "Fluid Hybrid" (Mobile Stacking)
+Canvas often strips `@media` queries, breaking standard responsive grids. To ensure columns stack on mobile but sit side-by-side on desktop, use the **Flex-Wrap Method**.
+
+* **Container:** `display: flex; flex-wrap: wrap; gap: 20px;`
+* **Item:** `flex: 1; min-width: 280px;`
+
+This forces the browser to wrap columns automatically when the screen is too narrow (under 280px per item), without needing media queries.
 
 ### The "Hero" Header
 A visual banner for the top of a page, using CSS gradients (which usually survive sanitizers).
@@ -203,7 +236,7 @@ A navigation bar that stays visible (if the iframe allows) or at least provides 
 </div>
 ```
 
-## VI. Color Palette Reference
+## VII. Color Palette Reference
 
 When using borders or colored backgrounds, use these safe HEX codes for the *solid* parts (borders), and convert them to RGBA for *backgrounds*.
 
@@ -216,7 +249,7 @@ When using borders or colored backgrounds, use these safe HEX codes for the *sol
 | Orange | #dd6b20 | rgba(221, 107, 32, 0.15) | Important, Caution |
 | Purple | #805ad5 | rgba(128, 90, 213, 0.15) | Creative, Discussion |
 
-## VII. Summary Checklist for New Content
+## VIII. Summary Checklist for New Content
 
 1. [ ] Did I remove `color: #...` from the text?
 2. [ ] Did I remove `background-color: #...` and replace it with `rgba(...)`?
