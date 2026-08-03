@@ -1,12 +1,12 @@
 # Configuration
 GENERATOR = generate.js
-DEFAULT_THEME = academic
+DEFAULT_THEME = latex
 
 # Theme Configuration per Type
-SYLLABUS_THEME = academic
+SYLLABUS_THEME = latex
 ASSIGNMENT_THEME = paper
-PAGE_THEME = modern
-ANNOUNCEMENT_THEME = brutalist
+PAGE_THEME = sakura
+ANNOUNCEMENT_THEME = water
 DISCUSSION_THEME = simple
 
 # Directories

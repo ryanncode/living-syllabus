@@ -10,3 +10,6 @@ _site/
 # OS Generated Files
 .DS_Store
 Thumbs.db
+
+# Build Output
+dist/
